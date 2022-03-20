@@ -24,13 +24,53 @@ require('packer').startup(function(use)
   -- Package manager
   use 'wbthomason/packer.nvim'
   -- fuzzy finder
-  use { 'nvim-telescope/telescope.nvim', requires = { {'nvim-lua/plenary.nvim'}, {'kyazdani42/nvim-web-devicons'} } }
+  use { 'nvim-telescope/telescope.nvim',
+    requires = { {'nvim-lua/plenary.nvim'}, {'kyazdani42/nvim-web-devicons'} }
+  }
+  -- fzf algorithm for telescope
+  use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
   -- color scheme
   use 'mjlbach/onedark.nvim'
   -- Fancier statusline
-  use { 'nvim-lualine/lualine.nvim', requires = { 'kyazdani42/nvim-web-devicons', opt = true } }
+  use { 'nvim-lualine/lualine.nvim',
+    requires = { 'kyazdani42/nvim-web-devicons', opt = true },
+    config = function() require('lualine').setup({
+      options = {
+      icons_enabled = false,
+      theme = 'onedark',
+      component_separators = '|',
+      section_separators = '',
+      },
+    }) end,
+  }
   -- highlighting, indentation, or folding
-  use 'nvim-treesitter/nvim-treesitter'
+  use { 'nvim-treesitter/nvim-treesitter' }
+  -- file explorer
+  use { 'preservim/nerdtree' }
+  -- git decorations
+  use {
+    'lewis6991/gitsigns.nvim',
+    requires = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      require('gitsigns').setup()
+    end
+  }
+  -- popup with possible key bindings
+  use {
+    "folke/which-key.nvim",
+    config = function()
+      require("which-key").setup {
+        -- your configuration comes here
+        -- or leave it empty to use the default settings
+        plugins = {
+          spelling = {
+            enabled = true, -- enabling this will show WhichKey when pressing z= to select spelling suggestions
+            suggestions = 30, -- how many suggestions should be shown in the list?
+          },
+        },
+      }
+    end
+  }
 
   -- Additional textobjects for treesitter
   -- use 'nvim-treesitter/nvim-treesitter-textobjects'
@@ -75,35 +115,51 @@ vim.cmd([[colorscheme onedark]])
 -- ========key mapping========
 -- ref: https://github.com/nanotee/nvim-lua-guide#defining-mappings
 
--- telescope key map
--- buffers
-vim.api.nvim_set_keymap('n', '<leader>tb', [[<cmd>lua require('telescope.builtin').buffers()<CR>]], { noremap = true, silent = true })
--- find files
-vim.api.nvim_set_keymap('n', '<leader>tf', [[<cmd>lua require('telescope.builtin').find_files({previewer = false})<CR>]], { noremap = true, silent = true })
+-- -- telescope key map
+-- vim.api.nvim_set_keymap('n', '<leader>tb', [[<cmd>lua require('telescope.builtin').buffers()<CR>]], { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', '<leader>tf', [[<cmd>lua require('telescope.builtin').find_files({previewer = false})<CR>]], { noremap = true, silent = true })
+--
+-- -- buffer operations
+-- vim.api.nvim_set_keymap('', 'bn', ':bn<CR>', { noremap = true, silent = true})
+-- vim.api.nvim_set_keymap('', 'bp', ':bp<CR>', { noremap = true, silent = true})
+-- vim.api.nvim_set_keymap('', 'bd', ':bd<CR>', { noremap = true, silent = true})
 
--- buffer operations
-vim.api.nvim_set_keymap('', 'bn', ':bn<CR>', { noremap = true, silent = true})
-vim.api.nvim_set_keymap('', 'bp', ':bp<CR>', { noremap = true, silent = true})
-vim.api.nvim_set_keymap('', 'bd', ':bd<CR>', { noremap = true, silent = true})
+local wk = require("which-key")
+wk.register({
+  -- file
+  ["<leader>t"] = { name = "Telescope" },
+  ["<leader>tf"] = { ":Telescope find_files<CR>", "Find File" },
+  ["<leader>tb"] = { ":Telescope buffers<CR>", "Find Buffer" },
+  -- buffer
+  ["<leader>b"] = { name = "buffer" },
+  ["<leader>bn"] = { ":bn<CR>", "Next Buffer" },
+  ["<leader>bp"] = { ":bp<CR>", "Previous Buffer" },
+  ["<leader>bd"] = { ":bd<CR>", "Delete Buffer" },
+  -- git
+  ["<leader>g"] = { name = "git signs" },
+  ["<leader>gt"] = { ":Gitsigns toggle_signs<CR>", "Toggle Signs" },
+  ["<leader>gn"] = { ":Gitsigns next_hunk<CR>", "Next Hunk" },
+  ["<leader>gp"] = { ":Gitsigns prev_hunk<CR>", "Prev Hunk" },
+  ["<leader>gd"] = { ":Gitsigns preview_hunk<CR>", "Hunk Diff" },
+})
 
 -- ========plugin config========
 
--- icons, not working
-require'nvim-web-devicons'.setup {
- -- globally enable default icons (default to false)
- -- will get overriden by `get_icons` option
- default = true;
+-- telescope
+require('telescope').setup {
+  extensions = {
+    fzf = {
+      fuzzy = true,                    -- false will only do exact matching
+      override_generic_sorter = true,  -- override the generic sorter
+      override_file_sorter = true,     -- override the file sorter
+      case_mode = "smart_case",        -- or "ignore_case" or "respect_case"
+                                       -- the default case_mode is "smart_case"
+    }
+  }
 }
-
--- statusbar
-require('lualine').setup {
-  options = {
-    icons_enabled = false,
-    theme = 'onedark',
-    component_separators = '|',
-    section_separators = '',
-  },
-}
+-- To get fzf loaded and working with telescope, you need to call
+-- load_extension, somewhere after setup function:
+require('telescope').load_extension('fzf')
 
 -- nvim-treesitter
 require'nvim-treesitter.configs'.setup {
