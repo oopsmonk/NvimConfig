@@ -57,5 +57,5 @@ function install_nerd_font(){
 # call install dependences
 install_deps
 # call install nerd font
-install_nerd_font
+# install_nerd_font
 
