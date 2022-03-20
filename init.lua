@@ -25,24 +25,15 @@ require('packer').startup(function(use)
   use 'wbthomason/packer.nvim'
   -- fuzzy finder
   use { 'nvim-telescope/telescope.nvim',
-    requires = { {'nvim-lua/plenary.nvim'}, {'kyazdani42/nvim-web-devicons'} }
+    -- requires = { {'nvim-lua/plenary.nvim'}, {'kyazdani42/nvim-web-devicons'} }
+    requires = { 'nvim-lua/plenary.nvim' }
   }
   -- fzf algorithm for telescope
   use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
   -- color scheme
   use 'mjlbach/onedark.nvim'
-  -- Fancier statusline
-  use { 'nvim-lualine/lualine.nvim',
-    requires = { 'kyazdani42/nvim-web-devicons', opt = true },
-    config = function() require('lualine').setup({
-      options = {
-      icons_enabled = false,
-      theme = 'onedark',
-      component_separators = '|',
-      section_separators = '',
-      },
-    }) end,
-  }
+  -- statusline
+  use {'vim-airline/vim-airline', requires = { 'vim-airline/vim-airline-themes'}, }
   -- highlighting, indentation, or folding
   use { 'nvim-treesitter/nvim-treesitter' }
   -- file explorer
@@ -72,13 +63,17 @@ require('packer').startup(function(use)
     end
   }
 
-  -- Additional textobjects for treesitter
-  -- use 'nvim-treesitter/nvim-treesitter-textobjects'
+  -- LSP and Autocompletion
+  -- TODO, nvim-cmp is not eays to config with different languages
+  -- https://github.com/neovim/nvim-lspconfig/wiki/Autocompletion
   -- use 'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
   -- use 'hrsh7th/nvim-cmp' -- Autocompletion plugin
-  -- use 'hrsh7th/cmp-nvim-lsp'
-  -- use 'saadparwaiz1/cmp_luasnip'
+  -- use 'hrsh7th/cmp-buffer' -- nvim-cmp source for buffer words
+  -- use 'quangnguyen30192/cmp-nvim-tags' -- tags completion source for nvim-cmp
+  -- use 'hrsh7th/cmp-nvim-lsp' -- LSP source for nvim-cmp
+  -- use 'saadparwaiz1/cmp_luasnip' -- Snippets source for nvim-cmp
   -- use 'L3MON4D3/LuaSnip' -- Snippets plugin
+
 end)
 
 -- ========Global Settings========
@@ -111,7 +106,6 @@ vim.opt.shiftwidth = 2
 vim.opt.termguicolors = true
 vim.cmd([[colorscheme onedark]])
 
-
 -- ========key mapping========
 -- ref: https://github.com/nanotee/nvim-lua-guide#defining-mappings
 
@@ -128,7 +122,7 @@ local wk = require("which-key")
 wk.register({
   -- file
   ["<leader>t"] = { name = "Telescope" },
-  ["<leader>tf"] = { ":Telescope find_files<CR>", "Find File" },
+  ["<leader>tf"] = { ":Telescope find_files previewer=false<CR>", "Find File" },
   ["<leader>tb"] = { ":Telescope buffers<CR>", "Find Buffer" },
   -- buffer
   ["<leader>b"] = { name = "buffer" },
@@ -144,6 +138,9 @@ wk.register({
 })
 
 -- ========plugin config========
+
+-- vim-airline
+vim.g.airline_theme = 'onedark'
 
 -- telescope
 require('telescope').setup {
@@ -180,4 +177,73 @@ require'nvim-treesitter.configs'.setup {
     additional_vim_regex_highlighting = false,
   },
 }
+
+-- ==============================================
+-- ========LSP and Autocompletion Support========
+-- ==============================================
+
+-- -- Add additional capabilities supported by nvim-cmp
+-- local capabilities = vim.lsp.protocol.make_client_capabilities()
+-- capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+--
+-- local lspconfig = require('lspconfig')
+--
+-- -- Enable some language servers with the additional completion capabilities offered by nvim-cmp
+-- -- local servers = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver' }
+-- local servers = { 'clangd' }
+-- for _, lsp in ipairs(servers) do
+--   lspconfig[lsp].setup {
+--     -- on_attach = my_custom_on_attach,
+--     capabilities = capabilities,
+--   }
+-- end
+--
+-- -- luasnip setup
+-- local luasnip = require 'luasnip'
+--
+-- -- nvim-cmp setup
+-- local cmp = require 'cmp'
+-- cmp.setup {
+--   snippet = {
+--     expand = function(args)
+--       require('luasnip').lsp_expand(args.body)
+--     end,
+--   },
+--   mapping = {
+--     ['<C-p>'] = cmp.mapping.select_prev_item(),
+--     ['<C-n>'] = cmp.mapping.select_next_item(),
+--     ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+--     ['<C-f>'] = cmp.mapping.scroll_docs(4),
+--     ['<C-Space>'] = cmp.mapping.complete(),
+--     ['<C-e>'] = cmp.mapping.close(),
+--     ['<CR>'] = cmp.mapping.confirm {
+--       behavior = cmp.ConfirmBehavior.Replace,
+--       select = true,
+--     },
+--     ['<Tab>'] = function(fallback)
+--       if cmp.visible() then
+--         cmp.select_next_item()
+--       elseif luasnip.expand_or_jumpable() then
+--         luasnip.expand_or_jump()
+--       else
+--         fallback()
+--       end
+--     end,
+--     ['<S-Tab>'] = function(fallback)
+--       if cmp.visible() then
+--         cmp.select_prev_item()
+--       elseif luasnip.jumpable(-1) then
+--         luasnip.jump(-1)
+--       else
+--         fallback()
+--       end
+--     end,
+--   },
+--   sources = {
+--     { name = 'nvim_lsp' },
+--     { name = 'buffer' },
+--     { name = 'luasnip' },
+--     { name = 'tags' },
+--   },
+-- }
 
