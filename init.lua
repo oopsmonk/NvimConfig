@@ -1,5 +1,6 @@
 --
 -- A simple lua config for nvim
+-- Neovim 0.7.0+
 --
 
 -- map leader key
@@ -222,6 +223,31 @@ end
 
 -- luasnip setup
 local luasnip = require 'luasnip'
+luasnip.config.set_config({
+  history = true,
+  -- Update more often, :h events for more info.
+  update_events = "TextChanged,TextChangedI",
+  -- treesitter-hl has 100, use something higher (default is 200).
+  ext_base_prio = 300,
+  -- minimal increase in priority.
+  ext_prio_increase = 1,
+  enable_autosnippets = true,
+})
+
+-- <c-j> is my expansion key
+-- this will expand the current item or jump to the next item within the snippet.
+vim.keymap.set({ "i", "s" }, "<c-j>", function()
+  if luasnip.expand_or_jumpable() then
+    luasnip.expand_or_jump()
+  end
+end, { silent = true })
+-- <c-k> is my jump backwards key.
+-- this always moves to the previous item within the snippet
+vim.keymap.set({ "i", "s" }, "<c-k>", function()
+  if luasnip.jumpable(-1) then
+    luasnip.jump(-1)
+  end
+end, { silent = true })
 
 -- nvim-cmp setup
 local cmp = require'cmp'
