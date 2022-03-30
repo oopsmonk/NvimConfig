@@ -33,6 +33,21 @@ require('packer').startup(function(use)
   use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
   -- color scheme
   use 'mjlbach/onedark.nvim'
+  -- display tags in a windown
+  use 'preservim/tagbar'
+  -- A (Neo)vim plugin for formatting code
+  use 'sbdchd/neoformat'
+  -- A Git wrapper so awesome, it should be illegal
+  use 'tpope/vim-fugitive'
+  -- Delete/change/add parentheses/quotes/XML-tags/much more with ease
+  use 'tpope/vim-surround'
+  -- Smart and powerful comment plugin for neovim
+  use {
+    'numToStr/Comment.nvim',
+    config = function()
+      require('Comment').setup()
+    end
+  }
   -- statusline
   use {'vim-airline/vim-airline', requires = { 'vim-airline/vim-airline-themes'}, }
   -- highlighting, indentation, or folding
@@ -53,11 +68,18 @@ require('packer').startup(function(use)
     config = function()
       require("which-key").setup {
         -- your configuration comes here
+        marks = false, -- disable marks on ' and `, disable for surround plugin
+        registers = false, -- disable show registers on ", disable for surrond plugin
         -- or leave it empty to use the default settings
         plugins = {
           spelling = {
             enabled = true, -- enabling this will show WhichKey when pressing z= to select spelling suggestions
             suggestions = 30, -- how many suggestions should be shown in the list?
+          },
+          -- the presets plugin, adds help for a bunch of default keybindings in neovim
+          -- No actual key bindings are created
+          presets = {
+            g = false, -- bindings for prefixed with g, disable for surround plugin
           },
         },
       }
@@ -90,6 +112,7 @@ vim.opt.history = 1000
 vim.o.mouse = 'nv'
 
 -- use relative line number
+vim.opt.number = true
 vim.opt.relativenumber = true
 
 -- enable system clipboard
