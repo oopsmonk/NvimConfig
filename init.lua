@@ -159,6 +159,8 @@ wk.register({
   ["<leader>tr"] = { "<cmd>Telescope lsp_references<CR>", "Goto References" },
   ["<leader>ti"] = { "<cmd>Telescope lsp_implementations<CR>", "Goto Implementations" },
   ["<leader>tt"] = { "<cmd>Telescope lsp_type_definitions<CR>", "Goto Type Definitions" },
+  ["<leader>tl"] = { "<cmd>Telescope live_grep<CR>", "Live grep" },
+  ["<leader>tm"] = { "<cmd>Telescope marks<CR>", "Show marks" },
   -- diagnostics
   ["<leader>d"] = { name = "Diagnostics" },
   -- ["<leader>de"] = { "<cmd>lua vim.diagnostic.enable()<CR>", "Enable Diagnostic" },
@@ -172,6 +174,7 @@ wk.register({
   ["<leader>b"] = { name = "buffer" },
   ["<leader>bn"] = { "<cmd>bn<CR>", "Next Buffer" },
   ["<leader>bp"] = { "<cmd>bp<CR>", "Previous Buffer" },
+  ["<leader>bd"] = { "<cmd>bdel<CR>", "Delete Buffer" },
   ["<leader>bh"] = { "<cmd>lua vim.lsp.buf.hover()<CR>", "Display Info" },
   ["<leader>brn"] = { "<cmd>lua vim.lsp.buf.rename()<CR>", "Rename" },
   ["<leader>bc"] = { "<cmd>lua vim.lsp.buf.code_action()<CR>", "Code Action" },
