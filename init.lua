@@ -86,6 +86,8 @@ require('packer').startup(function(use)
     end
   }
 
+  -- zig language
+  use 'ziglang/zig.vim'
   -- LSP and Autocompletion
   -- https://github.com/neovim/nvim-lspconfig/wiki/Autocompletion
   use 'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
@@ -121,10 +123,18 @@ vim.opt.clipboard = 'unnamedplus'
 -- wild ignore
 vim.opt.wildignore = { '*.o', '*.a', '*.obj' }
 
+-- enable cursor line highlight
+vim.opt.cursorline = true
+
 -- replace TAB with spaces
-vim.opt.expandtab = true
-vim.opt.softtabstop = 2
-vim.opt.shiftwidth = 2
+vim.api.nvim_create_autocmd("FileType",
+  {pattern = { "c", "cpp" }, command = [[setlocal expandtab shiftwidth=2 softtabstop=2]]})
+vim.api.nvim_create_autocmd("FileType",
+  {pattern = "sh", command = [[setlocal expandtab shiftwidth=2 softtabstop=2]]})
+
+-- go to last location
+vim.api.nvim_create_autocmd("BufReadPost",
+  { command = [[if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g`\"" | endif]] })
 
 -- Set colorscheme
 vim.opt.termguicolors = true
@@ -136,6 +146,11 @@ vim.opt.completeopt = {'menu', 'menuone', 'noselect'}
 -- listchars
 vim.opt.listchars = {eol = '↵'}
 vim.opt.list = true
+
+-- folding
+vim.opt.foldlevel = 20
+vim.opt.foldmethod = 'expr'
+vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
 
 -- ========key mapping========
 -- ref: https://github.com/nanotee/nvim-lua-guide#defining-mappings
@@ -239,7 +254,7 @@ local lspconfig = require('lspconfig')
 
 -- Enable some language servers with the additional completion capabilities offered by nvim-cmp
 -- local servers = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver' }
-local servers = { 'clangd' }
+local servers = { 'clangd', 'zls' }
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
     -- on_attach = my_custom_on_attach,
@@ -248,8 +263,8 @@ for _, lsp in ipairs(servers) do
 end
 
 -- luasnip setup
-local luasnip = require 'luasnip'
-luasnip.config.set_config({
+local ls = require 'luasnip'
+ls.config.set_config({
   history = true,
   -- Update more often, :h events for more info.
   update_events = "TextChanged,TextChangedI",
@@ -263,15 +278,15 @@ luasnip.config.set_config({
 -- <c-j> is my expansion key
 -- this will expand the current item or jump to the next item within the snippet.
 vim.keymap.set({ "i", "s" }, "<c-j>", function()
-  if luasnip.expand_or_jumpable() then
-    luasnip.expand_or_jump()
+  if ls.expand_or_jumpable() then
+    ls.expand_or_jump()
   end
 end, { silent = true })
 -- <c-k> is my jump backwards key.
 -- this always moves to the previous item within the snippet
 vim.keymap.set({ "i", "s" }, "<c-k>", function()
-  if luasnip.jumpable(-1) then
-    luasnip.jump(-1)
+  if ls.jumpable(-1) then
+    ls.jump(-1)
   end
 end, { silent = true })
 
@@ -303,49 +318,16 @@ cmp.setup({
   })
 })
 
--- with tab
--- local cmp = require'cmp'
--- cmp.setup {
---   snippet = {
---     expand = function(args)
---       require('luasnip').lsp_expand(args.body)
---     end,
---   },
---   mapping = {
---     ['<C-p>'] = cmp.mapping.select_prev_item(),
---     ['<C-n>'] = cmp.mapping.select_next_item(),
---     ['<C-d>'] = cmp.mapping.scroll_docs(-4),
---     ['<C-f>'] = cmp.mapping.scroll_docs(4),
---     ['<C-Space>'] = cmp.mapping.complete(),
---     ['<C-e>'] = cmp.mapping.close(),
---     ['<CR>'] = cmp.mapping.confirm {
---       behavior = cmp.ConfirmBehavior.Replace,
---       select = true,
---     },
---     ['<Tab>'] = function(fallback)
---       if cmp.visible() then
---         cmp.select_next_item()
---       elseif luasnip.expand_or_jumpable() then
---         luasnip.expand_or_jump()
---       else
---         fallback()
---       end
---     end,
---     ['<S-Tab>'] = function(fallback)
---       if cmp.visible() then
---         cmp.select_prev_item()
---       elseif luasnip.jumpable(-1) then
---         luasnip.jump(-1)
---       else
---         fallback()
---       end
---     end,
---   },
---   sources = {
---     { name = 'nvim_lsp' },
---     { name = 'buffer' },
---     { name = 'luasnip' },
---     { name = 'tags' },
---   },
--- }
+-- ==============================================
+-- ========           Snippets           ========
+-- ==============================================
+
+ls.add_snippets(
+  -- "all", {
+  --   ls.snippet("ternary", { ls.insert_node(1, "cond"), ls.text_node(" ? "), ls.insert_node(2, "then"), ls.text_node(" : "), ls.insert_node(3, "else")})
+  -- },
+  "c", {
+    ls.snippet("pf", { ls.text_node('printf("[%s:%d] '), ls.insert_node(1,'text'), ls.text_node('", __func__, __LINE__);')})
+  }
+)
 
