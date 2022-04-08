@@ -88,6 +88,9 @@ require('packer').startup(function(use)
 
   -- zig language
   use 'ziglang/zig.vim'
+  -- Markdown support
+  use 'preservim/vim-markdown'
+  use 'iamcco/markdown-preview.nvim'
   -- LSP and Autocompletion
   -- https://github.com/neovim/nvim-lspconfig/wiki/Autocompletion
   use 'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
@@ -128,7 +131,7 @@ vim.opt.cursorline = true
 
 -- replace TAB with spaces
 vim.api.nvim_create_autocmd("FileType",
-  {pattern = { "c", "cpp" }, command = [[setlocal expandtab shiftwidth=2 softtabstop=2]]})
+  {pattern = { "c", "cpp", "markdown" }, command = [[setlocal expandtab shiftwidth=2 softtabstop=2]]})
 vim.api.nvim_create_autocmd("FileType",
   {pattern = "sh", command = [[setlocal expandtab shiftwidth=2 softtabstop=2]]})
 
