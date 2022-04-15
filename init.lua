@@ -37,8 +37,6 @@ require('packer').startup(function(use)
   use 'preservim/tagbar'
   -- A (Neo)vim plugin for formatting code
   use 'sbdchd/neoformat'
-  -- A Git wrapper so awesome, it should be illegal
-  use 'tpope/vim-fugitive'
   -- Delete/change/add parentheses/quotes/XML-tags/much more with ease
   use 'tpope/vim-surround'
   -- Smart and powerful comment plugin for neovim
@@ -54,6 +52,8 @@ require('packer').startup(function(use)
   use { 'nvim-treesitter/nvim-treesitter' }
   -- file explorer
   use { 'preservim/nerdtree' }
+  -- A Git wrapper so awesome, it should be illegal
+  use 'tpope/vim-fugitive'
   -- git decorations
   use {
     'lewis6991/gitsigns.nvim',
@@ -86,6 +86,8 @@ require('packer').startup(function(use)
     end
   }
 
+  -- doxygen
+  use 'vim-scripts/DoxygenToolkit.vim'
   -- zig language
   use 'ziglang/zig.vim'
   -- Markdown support
@@ -169,6 +171,7 @@ vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
 
 local wk = require("which-key")
 wk.register({
+  ["<leader>nt"] = { "<cmd>NERDTreeFind<CR>", "Find the file in NERDTree" },
   -- file
   ["<leader>t"] = { name = "Telescope" },
   ["<leader>tf"] = { "<cmd>Telescope find_files previewer=false<CR>", "Find File" },
@@ -200,8 +203,9 @@ wk.register({
   ["<leader>g"] = { name = "git signs" },
   ["<leader>gt"] = { "<cmd>Gitsigns toggle_signs<CR>", "Toggle Signs" },
   ["<leader>gn"] = { "<cmd>Gitsigns next_hunk<CR>", "Next Hunk" },
-  ["<leader>gp"] = { ":Gitsigns prev_hunk<CR>", "Prev Hunk" },
-  ["<leader>gd"] = { ":Gitsigns preview_hunk<CR>", "Hunk Diff" },
+  ["<leader>gp"] = { "<cmd>Gitsigns prev_hunk<CR>", "Prev Hunk" },
+  ["<leader>gd"] = { "<cmd>Gitsigns preview_hunk<CR>", "Hunk Diff" },
+  ["<leader>gr"] = { "<cmd>Gitsigns reset_hunk<CR>", "Reset Hunk" },
 })
 
 -- ========plugin config========
