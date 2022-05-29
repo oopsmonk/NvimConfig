@@ -9,6 +9,18 @@ function install_deps(){
     echo "install deps error!"
     exit 1
   fi
+  pip install cmake-language-server
+  if [ $? -ne 0 ]
+  then
+    echo "install cmake lsp error!"
+    exit 1
+  fi
+  pip install pyright
+  if [ $? -ne 0 ]
+  then
+    echo "install python lsp error!"
+    exit 1
+  fi
 }
 
 function install_nerd_font(){
