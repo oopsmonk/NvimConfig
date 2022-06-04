@@ -93,6 +93,8 @@ require('packer').startup(function(use)
   -- Markdown support
   use 'preservim/vim-markdown'
   use 'iamcco/markdown-preview.nvim'
+  -- Go language
+  use {'fatih/vim-go', run = ':GoInstallBinaries'}
   -- LSP and Autocompletion
   -- https://github.com/neovim/nvim-lspconfig/wiki/Autocompletion
   use 'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
@@ -261,7 +263,7 @@ local lspconfig = require('lspconfig')
 
 -- Enable some language servers with the additional completion capabilities offered by nvim-cmp
 -- local servers = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver' }
-local servers = { 'clangd', 'zls', 'cmake', 'pyright' }
+local servers = { 'clangd', 'zls', 'cmake', 'pyright', 'gopls' }
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
     -- on_attach = my_custom_on_attach,
