@@ -106,6 +106,8 @@ require('packer').startup(function(use)
   use 'L3MON4D3/LuaSnip' -- Snippets plugin
   use 'saadparwaiz1/cmp_luasnip' -- Snippets source for nvim-cmp
 
+  -- hop lines and words in the buffer
+  use 'phaazon/hop.nvim'
 end)
 
 -- ========Global Settings========
@@ -208,9 +210,17 @@ wk.register({
   ["<leader>gp"] = { "<cmd>Gitsigns prev_hunk<CR>", "Prev Hunk" },
   ["<leader>gd"] = { "<cmd>Gitsigns preview_hunk<CR>", "Hunk Diff" },
   ["<leader>gr"] = { "<cmd>Gitsigns reset_hunk<CR>", "Reset Hunk" },
+  -- hop
+  ["<leader>h"] = { name = "hop" },
+  ["<leader>hl"] = { "<cmd>HopLineStart<CR>", "Hop between lines" },
+  ["<leader>hw"] = { "<cmd>HopWord<CR>", "Hop between Words" },
+  ["<leader>hc"] = { "<cmd>HopWordCurrentLine<CR>", "Hop between Words at current line" },
 })
 
 -- ========plugin config========
+
+-- hop.nvim
+require'hop'.setup()
 
 -- vim-airline
 vim.g.airline_theme = 'onedark'
