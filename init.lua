@@ -108,6 +108,8 @@ require('packer').startup(function(use)
 
   -- hop lines and words in the buffer
   use 'phaazon/hop.nvim'
+  -- buffer as tabs
+  use {'akinsho/bufferline.nvim', tag = "v3.*"}
 end)
 
 -- ========Global Settings========
@@ -218,6 +220,21 @@ wk.register({
 })
 
 -- ========plugin config========
+-- bufferline.nvim
+vim.opt.termguicolors = true
+require("bufferline").setup{
+  options = {
+    indicator = {
+      icon = '|',
+      style = 'icon',
+    },
+    buffer_close_icon = 'x',
+    modified_icon = '●',
+    close_icon = 'x',
+    left_trunc_marker = '>',
+    right_trunc_marker = '<',
+  }
+}
 
 -- hop.nvim
 require'hop'.setup()
