@@ -27,9 +27,6 @@ function install_deps(){
       exit 1
     fi
   fi
-  # tree-sitter
-  sudo apt install npm -y
-  sudo npm install -g tree-sitter-cli
 }
 
 # call install dependences

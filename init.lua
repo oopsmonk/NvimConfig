@@ -6,13 +6,6 @@
 -- map leader key
 vim.g.mapleader = ","
 
--- Install packer
-local install_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
-
-if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-  vim.fn.execute('!git clone https://github.com/wbthomason/packer.nvim ' .. install_path)
-end
-
 -- PackerComile on init.lua changes
 vim.cmd([[
   augroup Packer
@@ -20,6 +13,20 @@ vim.cmd([[
     autocmd BufWritePost init.lua PackerCompile
   augroup end
 ]])
+
+-- Packer bootstrapping
+local ensure_packer = function()
+  local fn = vim.fn
+  local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
+  if fn.empty(fn.glob(install_path)) > 0 then
+    fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
+    vim.cmd [[packadd packer.nvim]]
+    return true
+  end
+  return false
+end
+
+local packer_bootstrap = ensure_packer()
 
 require('packer').startup(function(use)
   -- Package manager
@@ -109,7 +116,12 @@ require('packer').startup(function(use)
   -- hop lines and words in the buffer
   use 'phaazon/hop.nvim'
   -- buffer as tabs
-  use {'akinsho/bufferline.nvim', tag = "v3.*"}
+  use {'akinsho/bufferline.nvim'}
+    -- Automatically set up your configuration after cloning packer.nvim
+  -- Put this at the end after all plugins
+  if packer_bootstrap then
+    require('packer').sync()
+  end
 end)
 
 -- ========Global Settings========
