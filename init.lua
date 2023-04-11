@@ -10,7 +10,7 @@ vim.g.mapleader = ","
 vim.cmd([[
   augroup Packer
     autocmd!
-    autocmd BufWritePost init.lua PackerCompile
+    autocmd BufWritePost init.lua source <afile> | PackerCompile
   augroup end
 ]])
 
@@ -200,6 +200,7 @@ wk.register({
   ["<leader>tt"] = { "<cmd>Telescope lsp_type_definitions<CR>", "Goto Type Definitions" },
   ["<leader>tl"] = { "<cmd>Telescope live_grep<CR>", "Live grep" },
   ["<leader>tm"] = { "<cmd>Telescope marks<CR>", "Show marks" },
+  ["<leader>ts"] = { "<cmd>Telescope grep_string<CR>", "grep string" },
   -- diagnostics
   ["<leader>d"] = { name = "Diagnostics" },
   -- ["<leader>de"] = { "<cmd>lua vim.diagnostic.enable()<CR>", "Enable Diagnostic" },
