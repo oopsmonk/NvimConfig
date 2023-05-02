@@ -269,10 +269,18 @@ require("mason-lspconfig").setup({
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 -- setup lsp with Mason
+local home_dir = os.getenv('HOME')
 local lspconfig = require('lspconfig')
 require("mason-lspconfig").setup_handlers({
   function (server_name)
     require("lspconfig")[server_name].setup{}
+  end,
+  -- mason-lspconfig provides a prebuilt zls which might outdated.
+  -- override the path to use the local one
+  ["zls"] = function()
+    lspconfig.zls.setup{
+      cmd = {home_dir .. "/bin/zls"}
+    }
   end,
 })
 

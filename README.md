@@ -49,12 +49,6 @@ Install requirments
 ./install-deps.sh
 ```
 
-Install plugins
-
-```bash
-nvim +PackerInstall
-```
-
 Check plugin
 
 ```bash
