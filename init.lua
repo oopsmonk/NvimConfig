@@ -147,6 +147,8 @@ require('lazy').setup({
   -- hop lines and words in the buffer
   -- NOTE: `opts = {}` is the same as calling `require('hop').setup({})`
   { 'phaazon/hop.nvim', opts = {}},
+  -- autopairs
+  { 'windwp/nvim-autopairs', opts = {}},
   -- buffer as tabs
   'akinsho/bufferline.nvim',
   -- file explorer
