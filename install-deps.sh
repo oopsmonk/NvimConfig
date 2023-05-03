@@ -18,15 +18,6 @@ function install_deps(){
     echo "install python lsp error!"
     exit 1
   fi
-  # install packer for nvim plugin management
-  packer_file="${HOME}/.local/share/nvim/site/pack/packer/start/packer.nvim"
-  if [ ! -d ${packer_file} ]; then
-    git clone --depth 1 https://github.com/wbthomason/packer.nvim ${paker_file}
-    if [ $? -ne 0 ]; then
-      echo "install packer!"
-      exit 1
-    fi
-  fi
 }
 
 # call install dependences

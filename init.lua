@@ -267,12 +267,12 @@ require("mason").setup()
 require("mason-lspconfig").setup({
   -- :help lspconfig-all
   ensure_installed = {
-    "clangd",
     "zls",
-    "cmake",
     "pyright",
-    "gopls",
     "lua_ls",
+    -- "cmake",
+    -- "gopls",
+    -- "clangd",
   },
 })
 

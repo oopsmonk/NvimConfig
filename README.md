@@ -1,4 +1,4 @@
-# NVIM Config in Lua language
+# Simple NVIM Configuration in Lua
 
 ## install Neovim
 
@@ -13,7 +13,7 @@ sudo apt-get install neovim
 ## install tree-sitter
 
 ```
-wget https://github.com/tree-sitter/tree-sitter/releases/download/v0.20.7/tree-sitter-linux-x64.gz
+wget https://github.com/tree-sitter/tree-sitter/releases/download/v0.20.8/tree-sitter-linux-x64.gz
 unzip tree-sitter-linux-x64.gz
 mv tree-sitter-linux-x64 tree-sitter
 chmod a+x tree-sitter
@@ -43,15 +43,33 @@ Replace local nvim config
 ln -s ${PWD}/NvimConfig ${HOME}/.config/nvim
 ```
 
-Install requirments
+Clean up cache, useful for switching between different plugin manager as well.
+
+```shell
+rm -rf ~/.local/share/nvim
+rm -rf ~/.local/state/nvim
+rm -rf ~/.cache/nvim
+```
+
+Install requirements
 
 ```bash
 ./install-deps.sh
 ```
 
-Check plugin
+Health check
 
 ```bash
 nvim +checkhealth
+```
+
+## Troubleshooting
+
+**treesitter/highlighter: Error executing lua: /usr/share/nvim/runtime/lua/vim/treesitter/query.lua...**
+**treesitter/highlighter: Error executing lua: /usr/share/nvim/runtime/lua/vim/treesitter/query.lua...**
+**treesitter/highlighter: Error executing lua: /usr/share/nvim/runtime/lua/vim/treesitter/query.lua...**
+
+```
+:TSInstall lua
 ```
 
