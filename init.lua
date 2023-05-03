@@ -46,6 +46,7 @@ require('lazy').setup({
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
       { 'j-hui/fidget.nvim', opts = {} },
 
+      -- completion for the nvim lua API
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
     },
@@ -53,7 +54,7 @@ require('lazy').setup({
 
   { -- Autocompletion
     'hrsh7th/nvim-cmp',
-    dependencies = { 
+    dependencies = {
       -- for neovim's built-in language server client
       'hrsh7th/cmp-nvim-lsp',
       -- path autocomplition
@@ -144,7 +145,8 @@ require('lazy').setup({
   },
 
   -- hop lines and words in the buffer
-  'phaazon/hop.nvim',
+  -- NOTE: `opts = {}` is the same as calling `require('hop').setup({})`
+  { 'phaazon/hop.nvim', opts = {}},
   -- buffer as tabs
   'akinsho/bufferline.nvim',
   -- file explorer
@@ -251,22 +253,26 @@ wk.register({
 
 -- ========LSP and Autocomplition config========
 
+-- IMPORTANT: make sure to setup neodev BEFORE lspconfig
+require("neodev").setup({
+  -- add any options here, or leave empty to use the default settings
+})
+
 -- Mason
 -- Easily install and manage LSP servers, DAP servers, linters, and formatters.
 require("mason").setup()
 -- Mason lsp configs
 require("mason-lspconfig").setup({
+  -- :help lspconfig-all
   ensure_installed = {
     "clangd",
     "zls",
     "cmake",
     "pyright",
     "gopls",
+    "lua_ls",
   },
 })
-
--- Add additional capabilities supported by nvim-cmp
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 -- setup lsp with Mason
 local home_dir = os.getenv('HOME')
@@ -284,9 +290,20 @@ require("mason-lspconfig").setup_handlers({
   end,
 })
 
+-- example to setup lua_ls and enable call snippets
+lspconfig.lua_ls.setup({
+  settings = {
+    Lua = {
+      completion = {
+        callSnippet = "Replace"
+      }
+    }
+  }
+})
+
 -- luasnip setup
 -- ref: https://github.com/L3MON4D3/LuaSnip/blob/master/Examples/snippets.lua
-local ls = require 'luasnip'
+local ls = require('luasnip')
 ls.config.set_config({
   history = true,
   -- Update more often, :h events for more info.
@@ -346,9 +363,6 @@ cmp.setup({
 })
 
 -- ========plugin config========
-
--- hop.nvim
-require'hop'.setup()
 
 -- bufferline.nvim
 vim.opt.termguicolors = true
