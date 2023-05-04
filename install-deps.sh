@@ -18,6 +18,11 @@ function install_deps(){
     echo "install python lsp error!"
     exit 1
   fi
+  pip install pynvim
+  if [ $? -ne 0 ]; then
+    echo "install pynvim error!"
+    exit 1
+  fi
 }
 
 # call install dependences

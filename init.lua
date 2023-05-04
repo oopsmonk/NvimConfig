@@ -209,6 +209,10 @@ vim.api.nvim_create_autocmd("BufReadPost", { command = [[if line("'\"") > 1 && l
  -- popup menu
 -- vim.opt.completeopt = {'menu', 'menuone', 'noselect'}
 
+-- disable providers
+vim.g.loaded_node_provider = 0
+vim.g.loaded_perl_provider = 0
+
 -- ========key mapping========
 local wk = require("which-key")
 wk.register({
