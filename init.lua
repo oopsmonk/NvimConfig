@@ -1,23 +1,22 @@
 --
 -- A simple lua config for nvim
--- Neovim 0.8.0+ with LuaJIT
+-- Neovim 0.10.0+ with LuaJIT
 --
 
 -- set ',' as the leader key
 vim.g.mapleader = ","
 
 -- Install package manager
--- `:h lazy.nvim.txt` for more info
-local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
-if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system {
-    'git',
-    'clone',
-    '--filter=blob:none',
-    'https://github.com/folke/lazy.nvim.git',
-    '--branch=stable', -- latest stable release
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
     lazypath,
-  }
+  })
 end
 vim.opt.rtp:prepend(lazypath)
 
@@ -156,7 +155,9 @@ require('lazy').setup({
   -- display tags in a windown
   'preservim/tagbar',
   -- zig language
-  'ziglang/zig.vim'
+  'ziglang/zig.vim',
+  -- A (Neo)vim plugin for formatting code.
+  'sbdchd/neoformat'
 
 }, {
   -- lazy configuration
@@ -212,6 +213,14 @@ vim.opt.completeopt = {'menu', 'menuone', 'noselect'}
 -- disable providers
 vim.g.loaded_node_provider = 0
 vim.g.loaded_perl_provider = 0
+
+-- python formatter
+vim.g.neoformat_python_black = {
+  exe = "black",
+  args = {"--line-length", "120", "-q", "-" },
+  stdin = 1,
+}
+vim.g.neoformat_enabled_python = { 'black', 'isort'}
 
 -- ========key mapping========
 local wk = require("which-key")
