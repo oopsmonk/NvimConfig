@@ -239,6 +239,7 @@ wk.register({
   ["<leader>ts"] = { "<cmd>Telescope grep_string<CR>", "[T]o [S]tring" },
   -- diagnostics
   ["<leader>d"] = { name = "[D]iagnostics" },
+  ["<leader>da"] = { "<cmd>lua vim.lsp.buf.code_action()<CR>", "Code [A]ction" },
   ["<leader>de"] = { "<cmd>LspStart<CR>", "[E]nable Diagnostic" },
   ["<leader>dd"] = { "<cmd>LspStop<CR>", "[D]isable Diagnostic" },
   ["<leader>dn"] = { "<cmd>lua vim.diagnostic.goto_next()<CR>", "[N]ext Diagnostic" },
@@ -251,7 +252,7 @@ wk.register({
   ["<leader>bd"] = { "<cmd>bdel<CR>", "[D]elete Buffer" },
   ["<leader>bh"] = { "<cmd>lua vim.lsp.buf.hover()<CR>", "[H]over in Buffer" },
   ["<leader>br"] = { "<cmd>lua vim.lsp.buf.rename()<CR>", "[R]ename in Buffer" },
-  ["<leader>bc"] = { "<cmd>lua vim.lsp.buf.code_action()<CR>", "[C]ode Action in Buffer" },
+  -- ["<leader>bc"] = { "<cmd>lua vim.lsp.buf.code_action()<CR>", "[C]ode Action in Buffer" },
   -- git
   ["<leader>g"] = { name = "[G]it signs" },
   ["<leader>gt"] = { "<cmd>Gitsigns toggle_signs<CR>", "[T]oggle Signs" },
