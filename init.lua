@@ -211,7 +211,7 @@ vim.api.nvim_create_autocmd("BufReadPost", { command = [[if line("'\"") > 1 && l
 vim.opt.completeopt = {'menu', 'menuone', 'noselect'}
 
 -- disable providers
-vim.g.loaded_node_provider = 0
+-- vim.g.loaded_node_provider = 0
 vim.g.loaded_perl_provider = 0
 
 -- python formatter
@@ -317,9 +317,16 @@ require("mason-lspconfig").setup({
     "zls",
     "pyright",
     "lua_ls",
+    "jsonls",
+    "yamlls",
     -- "cmake",
     -- "gopls",
     -- "clangd",
+    -- frontend dev
+    "tsserver",
+    "svelte",
+    "html",
+    "cssls",
   },
 })
 
