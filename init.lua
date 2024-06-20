@@ -157,7 +157,9 @@ require('lazy').setup({
   -- zig language
   'ziglang/zig.vim',
   -- A (Neo)vim plugin for formatting code.
-  'sbdchd/neoformat'
+  'sbdchd/neoformat',
+  -- The fastest Neovim colorizer.
+  'NvChad/nvim-colorizer.lua'
 
 }, {
   -- lazy configuration
@@ -456,5 +458,14 @@ require'nvim-treesitter.configs'.setup {
     -- Instead of true it can also be a list of languages
     additional_vim_regex_highlighting = false,
   },
+}
+
+-- colorizer setup
+-- ref: https://github.com/NvChad/nvim-colorizer.lua/tree/master?tab=readme-ov-file#customization
+require('colorizer').setup {
+  user_default_options = {
+    tailwind = true,
+    names = false,
+  }
 }
 
