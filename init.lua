@@ -192,6 +192,9 @@ vim.opt.history = 1000
 vim.opt.number = true
 vim.opt.relativenumber = true
 
+vim.opt.tabstop = 2
+vim.opt.shiftwidth = 2
+
 -- enable system clipboard
 vim.opt.clipboard = 'unnamedplus'
 
@@ -221,6 +224,8 @@ vim.g.neoformat_python_black = {
   stdin = 1,
 }
 vim.g.neoformat_enabled_python = { 'black', 'isort'}
+
+vim.g.neoformat_try_node_exe = 1
 
 -- ========key mapping========
 local wk = require("which-key")
@@ -426,11 +431,16 @@ require('telescope').setup {
 require('telescope').load_extension('fzf')
 
 -- nvim-treesitter
+---@diagnostic disable-next-line: missing-fields
 require'nvim-treesitter.configs'.setup {
   -- One of "all", "maintained" (parsers with maintainers), or a list of languages
   ensure_installed = {"bash", "c", "cmake", "cpp", "css", "devicetree", "dockerfile",
     "go", "gomod", "gowork", "html", "javascript", "json", "make", "ninja",
     "python", "rust", "toml", "typescript", "vim", "yaml", "zig"},
+
+  -- Automatically install missing parsers when entering buffer
+  -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
+  auto_install = true,
 
   -- Install languages synchronously (only applied to `ensure_installed`)
   sync_install = false,
