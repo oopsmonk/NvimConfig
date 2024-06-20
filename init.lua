@@ -330,6 +330,7 @@ require("mason-lspconfig").setup({
     -- "clangd",
     -- frontend dev
     "tsserver",
+    "tailwindcss",
     "svelte",
     "html",
     "cssls",
