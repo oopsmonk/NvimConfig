@@ -463,9 +463,15 @@ require'nvim-treesitter.configs'.setup {
 -- colorizer setup
 -- ref: https://github.com/NvChad/nvim-colorizer.lua/tree/master?tab=readme-ov-file#customization
 require('colorizer').setup {
+  filetypes = {
+    'css',
+    'javascript',
+    'typescript',
+    'html',
+    'svelte',
+  },
   user_default_options = {
     tailwind = true,
-    names = false,
   }
 }
 
