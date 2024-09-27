@@ -53,6 +53,7 @@ require('lazy').setup({
 
   { -- Autocompletion
     'hrsh7th/nvim-cmp',
+    event = 'InsertEnter',
     dependencies = {
       -- for neovim's built-in language server client
       'hrsh7th/cmp-nvim-lsp',
@@ -308,6 +309,8 @@ cmp.setup({
   -- documentation = cmp.config.window.bordered(),
   },
   mapping = cmp.mapping.preset.insert({
+    -- ['<C-n>'] = cmp.mapping.select_next_item(),
+    -- ['<C-p>'] = cmp.mapping.select_prev_item(),
     ['<C-b>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete(),
@@ -363,7 +366,7 @@ local lspconfig = require('lspconfig')
 require("mason-lspconfig").setup_handlers({
   function (server_name)
     require("lspconfig")[server_name].setup{
-      -- nvim-cmp
+      -- for nvim-cmp
       capabilities = cmp_capabilities,
     }
   end,
@@ -371,7 +374,8 @@ require("mason-lspconfig").setup_handlers({
   -- override the path to use the local one
   ["zls"] = function()
     lspconfig.zls.setup{
-      cmd = {home_dir .. "/bin/zls"}
+      cmd = {home_dir .. "/bin/zls"},
+      capabilities = cmp_capabilities,
     }
   end,
 })
