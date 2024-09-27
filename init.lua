@@ -285,6 +285,12 @@ wk.add({
   { "<leader>tt", "<cmd>Telescope lsp_type_definitions<CR>", desc = "[T]o [T]ype Definitions" },
 })
 
+if vim.lsp.inlay_hint then
+  wk.add({
+    {"<leader>H", "<cmd>lua vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())<CR>", desc = "Toggle Inlay Hints"},
+  })
+end
+
 -- ========LSP and Autocomplition config========
 
 -- nvim-cmp setup
