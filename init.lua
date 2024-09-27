@@ -69,7 +69,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim', opts = {} },
+  { 'folke/which-key.nvim', opts = { icons = { mappings = false }}},
 
   { -- Adds git releated signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -180,6 +180,15 @@ require('lazy').setup({
       lazy = "💤 ",
     },
   },
+  pkg = {
+    -- the first package source that is found for a plugin will be used.
+    sources = {
+      "lazy",
+      -- don't use lua package manager
+      -- "rockspec",
+      -- "packspec",
+    },
+  },
 })
 
 -- ========Global Settings========
@@ -231,47 +240,49 @@ vim.g.neoformat_try_node_exe = 1
 
 -- ========key mapping========
 local wk = require("which-key")
-wk.register({
-  ["<leader>nt"] = { "<cmd>NERDTreeFind<CR>", "Find the file in NERDTree" },
-  -- file
-  ["<leader>t"] = { name = "[T]elescope" },
-  ["<leader>tf"] = { "<cmd>Telescope find_files previewer=false<CR>", "[T]o [F]ile" },
-  ["<leader>tb"] = { "<cmd>Telescope buffers<CR>", "[T]o [B]uffer" },
-  ["<leader>td"] = { "<cmd>Telescope lsp_definitions<CR>", "[T]o [D]efinitions" },
-  ["<leader>tr"] = { "<cmd>Telescope lsp_references<CR>", "[T]o [R]eferences" },
-  ["<leader>ti"] = { "<cmd>Telescope lsp_implementations<CR>", "[T] [I]mplementations" },
-  ["<leader>tt"] = { "<cmd>Telescope lsp_type_definitions<CR>", "[T]o [T]ype Definitions" },
-  ["<leader>tl"] = { "<cmd>Telescope live_grep<CR>", "[T]elescope [L]ive grep" },
-  ["<leader>tm"] = { "<cmd>Telescope marks<CR>", "[T]o [M]arks" },
-  ["<leader>ts"] = { "<cmd>Telescope grep_string<CR>", "[T]o [S]tring" },
+wk.add({
+  { "<leader>n", group = "[N]erdTree" },
+  { "<leader>nf", "<cmd>NERDTreeFind<CR>", desc = "Find the file in NERDTree" },
+  { "<leader>nt", "<cmd>NERDTreeToggle<CR>", desc = "Toggle NERDTree" },
+  { "<leader>ng", "<cmd>NERDTreeVCS<CR>", desc = "Top of the Git project" },
+  -- Buffers
+  { "<leader>b", group = "[B]uffer" },
+  { "<leader>bd", "<cmd>bdel<CR>", desc = "[D]elete Buffer" },
+  { "<leader>bh", "<cmd>lua vim.lsp.buf.hover()<CR>", desc = "[H]over in Buffer" },
+  { "<leader>bn", "<cmd>bn<CR>", desc = "[N]ext Buffer" },
+  { "<leader>bp", "<cmd>bp<CR>", desc = "[P]revious Buffer" },
+  { "<leader>br", "<cmd>lua vim.lsp.buf.rename()<CR>", desc = "[R]ename in Buffer" },
   -- diagnostics
-  ["<leader>d"] = { name = "[D]iagnostics" },
-  ["<leader>da"] = { "<cmd>lua vim.lsp.buf.code_action()<CR>", "Code [A]ction" },
-  ["<leader>de"] = { "<cmd>LspStart<CR>", "[E]nable Diagnostic" },
-  ["<leader>dd"] = { "<cmd>LspStop<CR>", "[D]isable Diagnostic" },
-  ["<leader>dn"] = { "<cmd>lua vim.diagnostic.goto_next()<CR>", "[N]ext Diagnostic" },
-  ["<leader>dp"] = { "<cmd>lua vim.diagnostic.goto_prev()<CR>", "[P]rev Diagnostic" },
-  ["<leader>dl"] = { "<cmd>Telescope diagnostics<CR>", "[L]ist Diagnostic" },
-  -- buffer
-  ["<leader>b"] = { name = "[B]uffer" },
-  ["<leader>bn"] = { "<cmd>bn<CR>", "[N]ext Buffer" },
-  ["<leader>bp"] = { "<cmd>bp<CR>", "[P]revious Buffer" },
-  ["<leader>bd"] = { "<cmd>bdel<CR>", "[D]elete Buffer" },
-  ["<leader>bh"] = { "<cmd>lua vim.lsp.buf.hover()<CR>", "[H]over in Buffer" },
-  ["<leader>br"] = { "<cmd>lua vim.lsp.buf.rename()<CR>", "[R]ename in Buffer" },
-  -- ["<leader>bc"] = { "<cmd>lua vim.lsp.buf.code_action()<CR>", "[C]ode Action in Buffer" },
+  { "<leader>d", group = "[D]iagnostics" },
+  { "<leader>da", "<cmd>lua vim.lsp.buf.code_action()<CR>", desc = "Code [A]ction" },
+  { "<leader>dd", "<cmd>LspStop<CR>", desc = "[D]isable Diagnostic" },
+  { "<leader>de", "<cmd>LspStart<CR>", desc = "[E]nable Diagnostic" },
+  { "<leader>dl", "<cmd>Telescope diagnostics<CR>", desc = "[L]ist Diagnostic" },
+  { "<leader>dn", "<cmd>lua vim.diagnostic.goto_next()<CR>", desc = "[N]ext Diagnostic" },
+  { "<leader>dp", "<cmd>lua vim.diagnostic.goto_prev()<CR>", desc = "[P]rev Diagnostic" },
   -- git
-  ["<leader>g"] = { name = "[G]it signs" },
-  ["<leader>gt"] = { "<cmd>Gitsigns toggle_signs<CR>", "[T]oggle Signs" },
-  ["<leader>gn"] = { "<cmd>Gitsigns next_hunk<CR>", "[N]ext Hunk" },
-  ["<leader>gp"] = { "<cmd>Gitsigns prev_hunk<CR>", "[P]rev Hunk" },
-  ["<leader>gd"] = { "<cmd>Gitsigns preview_hunk<CR>", "[D]iff Hunk" },
-  ["<leader>gr"] = { "<cmd>Gitsigns reset_hunk<CR>", "[R]eset Hunk" },
-  -- hop
-  ["<leader>h"] = { name = "[H]op" },
-  ["<leader>hl"] = { "<cmd>HopLineStart<CR>", "[L]ine Hopping" },
-  ["<leader>hw"] = { "<cmd>HopWord<CR>", "[W]rod Hopping" },
-  ["<leader>hc"] = { "<cmd>HopWordCurrentLine<CR>", "[C]urrent Line Hopping" },
+  { "<leader>g", group = "[G]it signs" },
+  { "<leader>gd", "<cmd>Gitsigns preview_hunk<CR>", desc = "[D]iff Hunk" },
+  { "<leader>gn", "<cmd>Gitsigns next_hunk<CR>", desc = "[N]ext Hunk" },
+  { "<leader>gp", "<cmd>Gitsigns prev_hunk<CR>", desc = "[P]rev Hunk" },
+  { "<leader>gr", "<cmd>Gitsigns reset_hunk<CR>", desc = "[R]eset Hunk" },
+  { "<leader>gt", "<cmd>Gitsigns toggle_signs<CR>", desc = "[T]oggle Signs" },
+  -- moving, hop
+  { "<leader>h", group = "[H]op" },
+  { "<leader>hc", "<cmd>HopWordCurrentLine<CR>", desc = "[C]urrent Line Hopping" },
+  { "<leader>hl", "<cmd>HopLineStart<CR>", desc = "[L]ine Hopping" },
+  { "<leader>hw", "<cmd>HopWord<CR>", desc = "[W]rod Hopping" },
+  -- file
+  { "<leader>t", group = "[T]elescope" },
+  { "<leader>tb", "<cmd>Telescope buffers<CR>", desc = "[T]o [B]uffer" },
+  { "<leader>td", "<cmd>Telescope lsp_definitions<CR>", desc = "[T]o [D]efinitions" },
+  { "<leader>tf", "<cmd>Telescope find_files previewer=false<CR>", desc = "[T]o [F]ile" },
+  { "<leader>ti", "<cmd>Telescope lsp_implementations<CR>", desc = "[T] [I]mplementations" },
+  { "<leader>tl", "<cmd>Telescope live_grep<CR>", desc = "[T]elescope [L]ive grep" },
+  { "<leader>tm", "<cmd>Telescope marks<CR>", desc = "[T]o [M]arks" },
+  { "<leader>tr", "<cmd>Telescope lsp_references<CR>", desc = "[T]o [R]eferences" },
+  { "<leader>ts", "<cmd>Telescope grep_string<CR>", desc = "[T]o [S]tring" },
+  { "<leader>tt", "<cmd>Telescope lsp_type_definitions<CR>", desc = "[T]o [T]ype Definitions" },
 })
 
 -- ========LSP and Autocomplition config========
@@ -331,7 +342,8 @@ require("mason-lspconfig").setup({
     -- "gopls",
     -- "clangd",
     -- frontend dev
-    "tsserver",
+    -- "tsserver" has been renamed to `ts_ls`
+    "ts_ls",
     "tailwindcss",
     "svelte",
     "html",
