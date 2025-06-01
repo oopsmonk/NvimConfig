@@ -1,6 +1,6 @@
 --
 -- A simple lua config for nvim
--- Neovim 0.10.0+ with LuaJIT
+-- Neovim 0.11.0+ with LuaJIT
 --
 
 -- set ',' as the leader key
@@ -9,14 +9,17 @@ vim.g.mapleader = ","
 -- Install package manager
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
-    lazypath,
-  })
+  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+  if vim.v.shell_error ~= 0 then
+    vim.api.nvim_echo({
+      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+      { out, "WarningMsg" },
+      { "\nPress any key to exit..." },
+    }, true, {})
+    vim.fn.getchar()
+    os.exit(1)
+  end
 end
 vim.opt.rtp:prepend(lazypath)
 
@@ -35,19 +38,39 @@ require('lazy').setup({
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
   { -- LSP Configuration & Plugins
-    'neovim/nvim-lspconfig',
+    "mason-org/mason-lspconfig.nvim",
+    opts = {
+      ensure_installed = {
+        "zls",
+        "pyright",
+        "lua_ls",
+        "jsonls",
+        "yamlls",
+        -- "cmake",
+        -- "gopls",
+        -- "clangd",
+        -- frontend dev
+        "ts_ls",
+        "tailwindcss",
+        "svelte",
+        "html",
+        "cssls",
+      }
+    },
     dependencies = {
-      -- Automatically install LSPs to stdpath for neovim
-      { 'williamboman/mason.nvim', config = true },
-      'williamboman/mason-lspconfig.nvim',
-
-      -- Useful status updates for LSP
-      -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', opts = {} },
-
-      -- completion for the nvim lua API
-      -- Additional lua configuration, makes nvim stuff amazing!
-      'folke/neodev.nvim',
+        { "mason-org/mason.nvim", opts = {} },
+        "neovim/nvim-lspconfig",
+    },
+  },
+  { -- replace neodev.nvim
+    "folke/lazydev.nvim",
+    ft = "lua", -- only load on lua files
+    opts = {
+      library = {
+        -- See the configuration section for more details
+        -- Load luvit types when the `vim.uv` word is found
+        { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+      },
     },
   },
 
@@ -327,58 +350,12 @@ cmp.setup({
   })
 })
 
--- Add additional capabilities supported by nvim-cmp
-local cmp_capabilities = require('cmp_nvim_lsp').default_capabilities()
-
--- IMPORTANT: make sure to setup neodev BEFORE lspconfig
-require("neodev").setup({
-  -- add any options here, or leave empty to use the default settings
-})
-
 -- Mason
 -- Easily install and manage LSP servers, DAP servers, linters, and formatters.
 require("mason").setup()
--- Mason lsp configs
-require("mason-lspconfig").setup({
-  -- :help lspconfig-all
-  ensure_installed = {
-    "zls",
-    "pyright",
-    "lua_ls",
-    "jsonls",
-    "yamlls",
-    -- "cmake",
-    -- "gopls",
-    -- "clangd",
-    -- frontend dev
-    -- "tsserver" has been renamed to `ts_ls`
-    "ts_ls",
-    "tailwindcss",
-    "svelte",
-    "html",
-    "cssls",
-  },
-})
 
--- setup lsp with Mason
-local home_dir = os.getenv('HOME')
+-- -- setup lsp with Mason
 local lspconfig = require('lspconfig')
-require("mason-lspconfig").setup_handlers({
-  function (server_name)
-    require("lspconfig")[server_name].setup{
-      -- for nvim-cmp
-      capabilities = cmp_capabilities,
-    }
-  end,
-  -- mason-lspconfig provides a prebuilt zls which might outdated.
-  -- override the path to use the local one
-  ["zls"] = function()
-    lspconfig.zls.setup{
-      cmd = {home_dir .. "/bin/zls"},
-      capabilities = cmp_capabilities,
-    }
-  end,
-})
 
 -- example to setup lua_ls and enable call snippets
 lspconfig.lua_ls.setup({
