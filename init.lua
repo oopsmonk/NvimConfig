@@ -6,7 +6,7 @@
 -- set ',' as the leader key
 vim.g.mapleader = ","
 
--- Install package manager
+-- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
@@ -189,17 +189,31 @@ require('lazy').setup({
     "yetone/avante.nvim",
     event = "VeryLazy",
     version = false, -- Never set this value to "*"! Never!
+    -- add any opts here
+    -- for example
     opts = {
-      -- add any opts here
-      -- for example
-      provider = "openai",
-      openai = {
-        endpoint = "https://api.openai.com/v1",
-        model = "gpt-4o", -- your desired model (or use gpt-4o, etc.)
-        timeout = 30000, -- Timeout in milliseconds, increase this for reasoning models
-        temperature = 0,
-        max_completion_tokens = 8192, -- Increase this to include reasoning tokens (for reasoning models)
-        --reasoning_effort = "medium", -- low|medium|high, only used for reasoning models
+      providers = {
+        openai = {
+          endpoint = "https://api.openai.com/v1",
+          model = "gpt-4o", -- your desired model (or use gpt-4o, etc.)
+          timeout = 30000, -- Timeout in milliseconds, increase this for reasoning models
+          extra_request_body = {
+            temperature = 0,
+            max_completion_tokens = 8192, -- Increase this to include reasoning tokens (for reasoning models)
+            reasoning_effort = "medium", -- low|medium|high, only used for reasoning models
+          },
+        },
+        -- ollama = {
+        --   endpoint = "http://127.0.0.1:11434",
+        --   timeout = 30000, -- Timeout in milliseconds
+        --   extra_request_body = {
+        --     options = {
+        --       temperature = 0.75,
+        --       num_ctx = 20480,
+        --       keep_alive = "5m",
+        --     },
+        --   },
+        -- },
       },
       windows = {
         width = 40,
