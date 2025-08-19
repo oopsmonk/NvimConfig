@@ -130,16 +130,6 @@ require('lazy').setup({
     },
   },
 
-  -- { -- Add indentation guides even on blank lines
-  --   'lukas-reineke/indent-blankline.nvim',
-  --   -- Enable `lukas-reineke/indent-blankline.nvim`
-  --   -- See `:help indent_blankline.txt`
-  --   opts = {
-  --     char = '┊',
-  --     show_trailing_blankline_indent = false,
-  --   },
-  -- },
-
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
 
@@ -173,7 +163,7 @@ require('lazy').setup({
   -- autopairs
   { 'windwp/nvim-autopairs', opts = {}},
   -- buffer as tabs
-  'akinsho/bufferline.nvim',
+  {'akinsho/bufferline.nvim', version = "*", dependencies = 'nvim-tree/nvim-web-devicons', opts = {} },
   -- file explorer
   'preservim/nerdtree',
   -- display tags in a windown
@@ -184,103 +174,120 @@ require('lazy').setup({
   'sbdchd/neoformat',
   -- The fastest Neovim colorizer.
   'NvChad/nvim-colorizer.lua',
-  -- Avante: Use your Neovim like using Cursor AI IDE!
+  -- claude code
   {
-    "yetone/avante.nvim",
-    event = "VeryLazy",
-    version = false, -- Never set this value to "*"! Never!
-    -- add any opts here
-    -- for example
-    opts = {
-      providers = {
-        openai = {
-          endpoint = "https://api.openai.com/v1",
-          model = "gpt-4o", -- your desired model (or use gpt-4o, etc.)
-          timeout = 30000, -- Timeout in milliseconds, increase this for reasoning models
-          extra_request_body = {
-            temperature = 0,
-            max_completion_tokens = 8192, -- Increase this to include reasoning tokens (for reasoning models)
-            reasoning_effort = "medium", -- low|medium|high, only used for reasoning models
-          },
-        },
-        -- ollama = {
-        --   endpoint = "http://127.0.0.1:11434",
-        --   timeout = 30000, -- Timeout in milliseconds
-        --   extra_request_body = {
-        --     options = {
-        --       temperature = 0.75,
-        --       num_ctx = 20480,
-        --       keep_alive = "5m",
-        --     },
-        --   },
-        -- },
-      },
-      windows = {
-        width = 40,
-      },
-    },
-    -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
-    build = "make",
-    -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
+    "greggh/claude-code.nvim",
     dependencies = {
-      "nvim-treesitter/nvim-treesitter",
-      "stevearc/dressing.nvim",
-      "nvim-lua/plenary.nvim",
-      "MunifTanjim/nui.nvim",
-      --- The below dependencies are optional,
-      "echasnovski/mini.pick", -- for file_selector provider mini.pick
-      "nvim-telescope/telescope.nvim", -- for file_selector provider telescope
-      "hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
-      "ibhagwan/fzf-lua", -- for file_selector provider fzf
-      "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
-      "zbirenbaum/copilot.lua", -- for providers='copilot'
-      {
-        -- support for image pasting
-        "HakonHarnes/img-clip.nvim",
-        event = "VeryLazy",
-        opts = {
-          -- recommended settings
-          default = {
-            embed_image_as_base64 = false,
-            prompt_for_file_name = false,
-            drag_and_drop = {
-              insert_mode = true,
-            },
-            -- required for Windows users
-            use_absolute_path = true,
-          },
-        },
-      },
-      {
-        -- Make sure to set this up properly if you have lazy=true
-        'MeanderingProgrammer/render-markdown.nvim',
-        opts = {
-          file_types = { "markdown", "Avante" },
-        },
-        ft = { "markdown", "Avante" },
-      },
-    },
+      "nvim-lua/plenary.nvim", -- Required for git operations
+    }
+  },
+  -- render markdown
+  {
+    'MeanderingProgrammer/render-markdown.nvim',
+    dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.nvim' }, -- if you use the mini.nvim suite
+    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' }, -- if you use standalone mini plugins
+    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
+    ---@module 'render-markdown'
+    ---@type render.md.UserConfig
+    opts = {},
   }
+  -- Avante: Use your Neovim like using Cursor AI IDE!
+  -- {
+  --   "yetone/avante.nvim",
+  --   event = "VeryLazy",
+  --   version = false, -- Never set this value to "*"! Never!
+  --   -- add any opts here
+  --   -- for example
+  --   opts = {
+  --     providers = {
+  --       openai = {
+  --         endpoint = "https://api.openai.com/v1",
+  --         model = "gpt-4o", -- your desired model (or use gpt-4o, etc.)
+  --         timeout = 30000, -- Timeout in milliseconds, increase this for reasoning models
+  --         extra_request_body = {
+  --           temperature = 0,
+  --           max_completion_tokens = 8192, -- Increase this to include reasoning tokens (for reasoning models)
+  --           reasoning_effort = "medium", -- low|medium|high, only used for reasoning models
+  --         },
+  --       },
+  --       -- ollama = {
+  --       --   endpoint = "http://127.0.0.1:11434",
+  --       --   timeout = 30000, -- Timeout in milliseconds
+  --       --   extra_request_body = {
+  --       --     options = {
+  --       --       temperature = 0.75,
+  --       --       num_ctx = 20480,
+  --       --       keep_alive = "5m",
+  --       --     },
+  --       --   },
+  --       -- },
+  --     },
+  --     windows = {
+  --       width = 40,
+  --     },
+  --   },
+  --   -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
+  --   build = "make",
+  --   -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
+  --   dependencies = {
+  --     "nvim-treesitter/nvim-treesitter",
+  --     "stevearc/dressing.nvim",
+  --     "nvim-lua/plenary.nvim",
+  --     "MunifTanjim/nui.nvim",
+  --     --- The below dependencies are optional,
+  --     "echasnovski/mini.pick", -- for file_selector provider mini.pick
+  --     "nvim-telescope/telescope.nvim", -- for file_selector provider telescope
+  --     "hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
+  --     "ibhagwan/fzf-lua", -- for file_selector provider fzf
+  --     "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
+  --     "zbirenbaum/copilot.lua", -- for providers='copilot'
+  --     {
+  --       -- support for image pasting
+  --       "HakonHarnes/img-clip.nvim",
+  --       event = "VeryLazy",
+  --       opts = {
+  --         -- recommended settings
+  --         default = {
+  --           embed_image_as_base64 = false,
+  --           prompt_for_file_name = false,
+  --           drag_and_drop = {
+  --             insert_mode = true,
+  --           },
+  --           -- required for Windows users
+  --           use_absolute_path = true,
+  --         },
+  --       },
+  --     },
+  --     {
+  --       -- Make sure to set this up properly if you have lazy=true
+  --       'MeanderingProgrammer/render-markdown.nvim',
+  --       opts = {
+  --         file_types = { "markdown", "Avante" },
+  --       },
+  --       ft = { "markdown", "Avante" },
+  --     },
+  --   },
+  -- }
 
 }, {
   -- lazy configuration
-  -- don't want to use a Nerd Font
-  ui = {
-    icons = {
-      cmd = "⌘",
-      config = "🛠",
-      event = "📅",
-      ft = "📂",
-      init = "⚙",
-      keys = "🗝",
-      plugin = "🔌",
-      runtime = "💻",
-      source = "📄",
-      start = "🚀",
-      task = "📌",
-      lazy = "💤 ",
-    },
-  },
+  -- if not use the Nerd Font
+  -- ui = {
+  --   icons = {
+  --     cmd = "⌘",
+  --     config = "🛠",
+  --     event = "📅",
+  --     ft = "📂",
+  --     init = "⚙",
+  --     keys = "🗝",
+  --     plugin = "🔌",
+  --     runtime = "💻",
+  --     source = "📄",
+  --     start = "🚀",
+  --     task = "📌",
+  --     lazy = "💤 ",
+  --   },
+  -- },
   pkg = {
     -- the first package source that is found for a plugin will be used.
     sources = {
@@ -384,6 +391,8 @@ wk.add({
   { "<leader>tr", "<cmd>Telescope lsp_references<CR>", desc = "[T]o [R]eferences" },
   { "<leader>ts", "<cmd>Telescope grep_string<CR>", desc = "[T]o [S]tring" },
   { "<leader>tt", "<cmd>Telescope lsp_type_definitions<CR>", desc = "[T]o [T]ype Definitions" },
+  -- others
+  { "<leader>rm", "<cmd>RenderMarkdown toggle<CR>", desc = "[R]ender[M]arkdown toggle" },
 })
 
 if vim.lsp.inlay_hint then
@@ -477,22 +486,6 @@ end, { silent = true })
 
 -- ========plugin config========
 
--- bufferline.nvim
-vim.opt.termguicolors = true
-require("bufferline").setup{
-  options = {
-    indicator = {
-      icon = '𝄞',
-      style = 'icon',
-    },
-    buffer_close_icon = '✗',
-    modified_icon = '●',
-    close_icon = '✗',
-    left_trunc_marker = '>',
-    right_trunc_marker = '<',
-  }
-}
-
 -- telescope
 require('telescope').setup {
   extensions = {
@@ -550,4 +543,11 @@ require('colorizer').setup {
     tailwind = true,
   }
 }
+
+-- claude code config
+require("claude-code").setup({
+  window = {
+    position = "float",
+  }
+})
 
