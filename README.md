@@ -13,8 +13,8 @@ sudo apt-get install neovim
 ## install tree-sitter
 
 ```
-wget https://github.com/tree-sitter/tree-sitter/releases/download/v0.20.8/tree-sitter-linux-x64.gz
-unzip tree-sitter-linux-x64.gz
+wget https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-linux-x64.gz
+gzip -d tree-sitter-linux-x64.gz
 mv tree-sitter-linux-x64 tree-sitter
 chmod a+x tree-sitter
 ```
