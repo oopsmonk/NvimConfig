@@ -1,6 +1,4 @@
-# Simple NVIM Configuration in Lua
-
-## install Neovim
+# install Neovim on macOS
 
 Ref: [Install Neovim macOS](https://github.com/neovim/neovim/blob/master/INSTALL.md#macos--os-x)
 

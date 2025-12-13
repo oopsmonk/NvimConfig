@@ -1,75 +1,33 @@
-# Simple NVIM Configuration in Lua
+# Simple NVIM Configuration
 
-## install Neovim
+## Key Bindings
 
-Ref: [Install Neovim Ubuntu](https://github.com/neovim/neovim/wiki/Installing-Neovim#ubuntu)
+TODO
 
-```
-sudo add-apt-repository ppa:neovim-ppa/stable
-sudo apt-get update
-sudo apt-get install neovim
-```
+## Plugins
 
-## install tree-sitter
-
-```
-wget https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-linux-x64.gz
-gzip -d tree-sitter-linux-x64.gz
-mv tree-sitter-linux-x64 tree-sitter
-chmod a+x tree-sitter
-```
-
-## install rust-analyzer
-
-```
-wget https://github.com/rust-lang/rust-analyzer/releases/download/2022-11-07/rust-analyzer-x86_64-unknown-linux-gnu.gz
-gunzip rust-analyzer-x86_64-unknown-linux-gnu.gz
-mv rust-analyzer-x86_64-unknown-linux-gnu rust-analyzer
-chmod a+x rust-analyzer
-```
-
-## Neovim configuration
-
-Clone the project
-
-```bash
-git clone https://github.com/oopsmonk/NvimConfig.git
-```
-
-Replace local nvim config
-
-```bash
-# mv ~/.config/nvim ~/.config/nvim-backup
-ln -s ${PWD}/NvimConfig ${HOME}/.config/nvim
-```
-
-Clean up cache, useful for switching between different plugin manager as well.
-
-```shell
-rm -rf ~/.local/share/nvim
-rm -rf ~/.local/state/nvim
-rm -rf ~/.cache/nvim
-```
-
-Install requirements
-
-```bash
-./install-deps.sh
-```
-
-Health check
-
-```bash
-nvim +checkhealth
-```
-
-## Troubleshooting
-
-**treesitter/highlighter: Error executing lua: /usr/share/nvim/runtime/lua/vim/treesitter/query.lua...**
-**treesitter/highlighter: Error executing lua: /usr/share/nvim/runtime/lua/vim/treesitter/query.lua...**
-**treesitter/highlighter: Error executing lua: /usr/share/nvim/runtime/lua/vim/treesitter/query.lua...**
-
-```
-:TSInstall lua
-```
-
+1. [lazy.nvim](https://github.com/folke/lazy.nvim): plugin manager
+1. [vim-fugitive](https://github.com/tpope/vim-fugitive): Git wrapper
+1. [sleuth.vim](https://github.com/tpope/vim-sleuth): automatically adjusts `shiftwidth` and `expandtab` heuristically based on the current file
+1. [mason.nvim](https://github.com/mason-org/mason.nvim): easily manage external editor tooling such as LSP servers, DAP servers, linters, and formatters through a single interface.
+1. [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig): a collection of LSP server configurations for the [Nvim LSP client](https://neovim.io/doc/user/lsp.html).
+1. [mason-lspconfig.nvim](https://github.com/mason-org/mason-lspconfig.nvim): mason-lspconfig bridges `mason.nvim` with the `lspconfig` plugin
+1. [lazydev.nvim](https://github.com/folke/lazydev.nvim): Faster LuaLS setup for Neovim
+1. [nvim-cmp](https://github.com/hrsh7th/nvim-cmp): A completion plugin for neovim coded in Lua.
+1. [which-key.nvim](https://github.com/folke/which-key.nvim): showing available keybindings in a popup as you type.
+1. [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim): Git integration for buffers
+1. [onedark.nvim](https://github.com/navarasu/onedark.nvim): One dark and light colorscheme
+1. [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim): A blazing fast and easy to configure neovim statusline plugin.
+1. [Comment.nvim](https://github.com/numToStr/Comment.nvim): Smart and powerful comment
+1. [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim): the power of the moon.
+1. [telescope-fzf-native.nvim](https://github.com/nvim-telescope/telescope-fzf-native.nvim): a c port of [fzf](https://github.com/junegunn/fzf).
+1. [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter): Nvim Treesitter configurations and abstraction layer.
+1. [flash.nvim](https://github.com/folke/flash.nvim): lets you navigate your code with search labels, enhanced character motions, and Treesitter integration.
+1. [nvim-autopairs](https://github.com/windwp/nvim-autopairs): autopairs
+1. [bufferline.nvim](https://github.com/akinsho/bufferline.nvim): A snazzy bufferline
+1. [nerdtree](https://github.com/preservim/nerdtree): a file system explorer
+1. [tagbar](https://github.com/preservim/tagbar): display tags in a window, ordered by scope.
+1. [zig.vim](https://codeberg.org/ziglang/zig.vim): File detection and syntax highlighting for the zig programming language.
+1. [neoformat](https://github.com/sbdchd/neoformat): code formatter.
+1. [nvim-colorizer](https://github.com/catgoose/nvim-colorizer.lua): A high-performance color highlighter.
+1. [render-markdown.nvim](https://github.com/MeanderingProgrammer/render-markdown.nvim): improve viewing Markdown files.

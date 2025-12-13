@@ -29,10 +29,9 @@ require('lazy').setup({
 
   -- Git related plugins
   'tpope/vim-fugitive',
-  -- If fugitive.vim is the Git, rhubarb.vim is the Hub.
-  'tpope/vim-rhubarb',
 
   -- Detect tabstop and shiftwidth automatically
+  -- check `:verbose set shiftwidth?`
   'tpope/vim-sleuth',
 
   -- NOTE: This is where your plugins related to LSP can be installed.
@@ -41,8 +40,9 @@ require('lazy').setup({
     "mason-org/mason-lspconfig.nvim",
     opts = {
       ensure_installed = {
-        "zls",
-        "pyright",
+        "zls", -- zig lsp
+        "ruff", -- python linter and formatter
+        "pylsp", -- python lsp
         "lua_ls",
         "jsonls",
         "yamlls",
@@ -179,18 +179,18 @@ require('lazy').setup({
   -- display tags in a windown
   'preservim/tagbar',
   -- zig language
-  'ziglang/zig.vim',
+  {'ziglang/zig.vim', url = "https://codeberg.org/ziglang/zig.vim.git"},
   -- A (Neo)vim plugin for formatting code.
   'sbdchd/neoformat',
   -- The fastest Neovim colorizer.
-  'NvChad/nvim-colorizer.lua',
+  'catgoose/nvim-colorizer.lua',
   -- claude code
-  {
-    "greggh/claude-code.nvim",
-    dependencies = {
-      "nvim-lua/plenary.nvim", -- Required for git operations
-    }
-  },
+  -- {
+  --   "greggh/claude-code.nvim",
+  --   dependencies = {
+  --     "nvim-lua/plenary.nvim", -- Required for git operations
+  --   }
+  -- },
   -- render markdown
   {
     'MeanderingProgrammer/render-markdown.nvim',
@@ -269,14 +269,8 @@ vim.opt.completeopt = {'menu', 'menuone', 'noselect'}
 -- vim.g.loaded_node_provider = 0
 vim.g.loaded_perl_provider = 0
 
--- python formatter
-vim.g.neoformat_python_black = {
-  exe = "black",
-  args = {"--line-length", "120", "-q", "-" },
-  stdin = 1,
-}
-vim.g.neoformat_enabled_python = { 'black', 'isort'}
-
+-- python formatter use ruff
+vim.g.neoformat_enabled_python = {'ruff'}
 vim.g.neoformat_try_node_exe = 1
 
 -- ========key mapping========
@@ -293,6 +287,7 @@ wk.add({
   { "<leader>bn", "<cmd>bn<CR>", desc = "[N]ext Buffer" },
   { "<leader>bp", "<cmd>bp<CR>", desc = "[P]revious Buffer" },
   { "<leader>br", "<cmd>lua vim.lsp.buf.rename()<CR>", desc = "[R]ename in Buffer" },
+  { "<leader>bs", "<cmd>BufferLinePick<CR>", desc = "[S]elete buffer tab" },
   -- diagnostics
   { "<leader>d", group = "[D]iagnostics" },
   { "<leader>da", "<cmd>lua vim.lsp.buf.code_action()<CR>", desc = "Code [A]ction" },
@@ -364,23 +359,30 @@ cmp.setup({
   })
 })
 
+-- The nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
+-- local cmp_capabilities = require('cmp_nvim_lsp').default_capabilities()
+
 -- Mason
 -- Easily install and manage LSP servers, DAP servers, linters, and formatters.
 require("mason").setup()
+local home_dir = os.getenv('HOME')
 
--- -- setup lsp with Mason
-local lspconfig = require('lspconfig')
-
--- example to setup lua_ls and enable call snippets
-lspconfig.lua_ls.setup({
-  settings = {
-    Lua = {
-      completion = {
-        callSnippet = "Replace"
-      }
-    }
-  }
+-- An example for configuring `zig` LSP to use nvim-cmp as a completion engine
+vim.lsp.config("zls", {
+  cmd = {home_dir .. "/bin/zls"},
+  -- capabilities = cmp_capabilities,
 })
+
+-- example setup lsp with Mason
+-- vim.lsp.config("lua_ls", {
+--   settings = {
+--     Lua = {
+--       completion = {
+--         callSnippet = "Replace",
+--       },
+--     },
+--   },
+-- })
 
 -- luasnip setup
 -- ref: https://github.com/L3MON4D3/LuaSnip/blob/master/Examples/snippets.lua
@@ -473,9 +475,9 @@ require('colorizer').setup {
 }
 
 -- claude code config
-require("claude-code").setup({
-  window = {
-    position = "float",
-  }
-})
+-- require("claude-code").setup({
+--   window = {
+--     position = "float",
+--   }
+-- })
 
