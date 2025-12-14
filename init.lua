@@ -184,13 +184,6 @@ require('lazy').setup({
   'sbdchd/neoformat',
   -- The fastest Neovim colorizer.
   'catgoose/nvim-colorizer.lua',
-  -- claude code
-  -- {
-  --   "greggh/claude-code.nvim",
-  --   dependencies = {
-  --     "nvim-lua/plenary.nvim", -- Required for git operations
-  --   }
-  -- },
   -- render markdown
   {
     'MeanderingProgrammer/render-markdown.nvim',
@@ -299,8 +292,8 @@ wk.add({
   -- git
   { "<leader>g", group = "[G]it signs" },
   { "<leader>gd", "<cmd>Gitsigns preview_hunk<CR>", desc = "[D]iff Hunk" },
-  { "<leader>gn", "<cmd>Gitsigns next_hunk<CR>", desc = "[N]ext Hunk" },
-  { "<leader>gp", "<cmd>Gitsigns prev_hunk<CR>", desc = "[P]rev Hunk" },
+  { "<leader>gn", "<cmd>Gitsigns next_hunk_inline<CR>", desc = "[N]ext Hunk" },
+  { "<leader>gp", "<cmd>Gitsigns prev_hunk_inline<CR>", desc = "[P]rev Hunk" },
   { "<leader>gr", "<cmd>Gitsigns reset_hunk<CR>", desc = "[R]eset Hunk" },
   { "<leader>gt", "<cmd>Gitsigns toggle_signs<CR>", desc = "[T]oggle Signs" },
   -- file
@@ -373,16 +366,6 @@ vim.lsp.config("zls", {
   -- capabilities = cmp_capabilities,
 })
 
--- example setup lsp with Mason
--- vim.lsp.config("lua_ls", {
---   settings = {
---     Lua = {
---       completion = {
---         callSnippet = "Replace",
---       },
---     },
---   },
--- })
 
 -- luasnip setup
 -- ref: https://github.com/L3MON4D3/LuaSnip/blob/master/Examples/snippets.lua
@@ -473,11 +456,3 @@ require('colorizer').setup {
     tailwind = true,
   }
 }
-
--- claude code config
--- require("claude-code").setup({
---   window = {
---     position = "float",
---   }
--- })
-

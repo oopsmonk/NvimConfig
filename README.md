@@ -1,8 +1,32 @@
-# Simple NVIM Configuration
+# NVIM Configuration
 
 ## Key Bindings
 
-TODO
+Code format, `:Neoformat`, neoformat
+Jump to the newer/older cursor position in the jumplist, `Ctrl i` / `Ctrl o` / `:jumps`, build-in, 
+Snippet jump to the next/prev parameter, `Ctrl j` / `Ctrl k`, luasnip
+Comment the current line, `gcc`, Comment.nvim
+
+
+### Git
+
+Git open a vertical diff split, `:Gvdiffsplit`, vim-fugitive
+Jump to the next/prev hunk, `]c` / `[c`, vim-fugitive
+
+`:Git` status buffer, vim-fugitive
+- stage/unstage file, `-`
+- open diff, `dv`
+- inline diff, `=`
+
+
+### Window
+
+Layoyt to horizontal, `Ctrl+w H`, build-in
+Split to horizontal, `Ctrl+w v`, build-in
+Rotate, `Ctrl+w r`, build-in
+Rotate, `Ctrl+w r`, build-in
+Close all other windows, `Ctrl+w o`, build-in
+
 
 ## Plugins
 
