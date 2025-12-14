@@ -23,6 +23,23 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+-- lsp server list for mason-lspconfig
+local lsp_list = {
+  "zls", -- zig lsp
+  "ruff", -- python linter and formatter
+  "pylsp", -- python lsp
+  "lua_ls",
+  "jsonls",
+  "yamlls",
+  -- "cmake",
+  -- "gopls",
+  -- "clangd",
+  -- frontend dev
+  "ts_ls",
+  "tailwindcss",
+  "svelte",
+}
+
 -- Install plugins
 require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
@@ -39,23 +56,7 @@ require('lazy').setup({
   { -- LSP Configuration & Plugins
     "mason-org/mason-lspconfig.nvim",
     opts = {
-      ensure_installed = {
-        "zls", -- zig lsp
-        "ruff", -- python linter and formatter
-        "pylsp", -- python lsp
-        "lua_ls",
-        "jsonls",
-        "yamlls",
-        -- "cmake",
-        -- "gopls",
-        -- "clangd",
-        -- frontend dev
-        "ts_ls",
-        "tailwindcss",
-        "svelte",
-        "html",
-        "cssls",
-      }
+      ensure_installed = lsp_list,
     },
     dependencies = {
         { "mason-org/mason.nvim", opts = {} },
@@ -353,18 +354,32 @@ cmp.setup({
 })
 
 -- The nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
--- local cmp_capabilities = require('cmp_nvim_lsp').default_capabilities()
+local cmp_capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 -- Mason
 -- Easily install and manage LSP servers, DAP servers, linters, and formatters.
 require("mason").setup()
 local home_dir = os.getenv('HOME')
 
--- An example for configuring `zig` LSP to use nvim-cmp as a completion engine
+-- use nvim-cmp for all servers
+-- vim.lsp.config("*", {
+--   capabilities = cmp_capabilities,
+-- })
+
+-- `zig` LSP to use local lsp engine
 vim.lsp.config("zls", {
   cmd = {home_dir .. "/bin/zls"},
+  -- nvim-cmp is bloated with zls, therefor we use default one.
   -- capabilities = cmp_capabilities,
 })
+-- apply nvim-cmp to specific server
+for _, server in ipairs(lsp_list) do
+  if server ~= "zls" then
+    vim.lsp.config(server, {
+      capabilities = cmp_capabilities,
+    })
+  end
+end
 
 
 -- luasnip setup
