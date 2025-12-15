@@ -2,6 +2,7 @@
 
 ## Key Bindings
 
+Jump in buffer, `s`, flash.nvim
 Code format, `:Neoformat`, neoformat
 Jump to the newer/older cursor position in the jumplist, `Ctrl i` / `Ctrl o` / `:jumps`, build-in, 
 Snippet jump to the next/prev parameter, `Ctrl j` / `Ctrl k`, luasnip
