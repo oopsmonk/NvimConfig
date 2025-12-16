@@ -367,11 +367,15 @@ local home_dir = os.getenv('HOME')
 -- })
 
 -- `zig` LSP to use local lsp engine
-vim.lsp.config("zls", {
-  cmd = {home_dir .. "/bin/zls"},
-  -- nvim-cmp is bloated with zls, therefor we use default one.
-  -- capabilities = cmp_capabilities,
-})
+local zls_path = home_dir .. "/bin/zls"
+if vim.fn.executable(zls_path) == 1 then
+  vim.lsp.config("zls", {
+    cmd = { zls_path },
+    -- nvim-cmp is bloated with zls, therefor we use default one.
+    -- capabilities = cmp_capabilities,
+  })
+end
+
 -- apply nvim-cmp to specific server
 for _, server in ipairs(lsp_list) do
   if server ~= "zls" then
