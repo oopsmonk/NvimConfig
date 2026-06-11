@@ -155,6 +155,7 @@ require('lazy').setup({
     dependencies = {
       'nvim-treesitter/nvim-treesitter-textobjects',
     },
+    branch = 'main',
     build = ":TSUpdate",
   },
   { -- flash.nvim
@@ -293,8 +294,8 @@ wk.add({
   -- git
   { "<leader>g", group = "[G]it signs" },
   { "<leader>gd", "<cmd>Gitsigns preview_hunk<CR>", desc = "[D]iff Hunk" },
-  { "<leader>gn", "<cmd>Gitsigns next_hunk_inline<CR>", desc = "[N]ext Hunk" },
-  { "<leader>gp", "<cmd>Gitsigns prev_hunk_inline<CR>", desc = "[P]rev Hunk" },
+  { "<leader>gn", "<cmd>Gitsigns nav_hunk next<CR>", desc = "[N]ext Hunk" },
+  { "<leader>gp", "<cmd>Gitsigns nav_hunk prev<CR>", desc = "[P]rev Hunk" },
   { "<leader>gr", "<cmd>Gitsigns reset_hunk<CR>", desc = "[R]eset Hunk" },
   { "<leader>gt", "<cmd>Gitsigns toggle_signs<CR>", desc = "[T]oggle Signs" },
   -- file
@@ -435,30 +436,11 @@ require('telescope').setup {
 require('telescope').load_extension('fzf')
 
 -- nvim-treesitter
----@diagnostic disable-next-line: missing-fields
-require'nvim-treesitter.configs'.setup {
-  -- One of "all", "maintained" (parsers with maintainers), or a list of languages
-  ensure_installed = {"bash", "c", "cmake", "cpp", "css", "devicetree", "dockerfile",
-    "go", "gomod", "gowork", "html", "javascript", "json", "make", "ninja",
-    "python", "rust", "toml", "typescript", "vim", "yaml", "zig"},
-
-  -- Automatically install missing parsers when entering buffer
-  -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
-  auto_install = true,
-
-  -- Install languages synchronously (only applied to `ensure_installed`)
-  sync_install = false,
-
-  highlight = {
-    -- `false` will disable the whole extension
-    enable = true,
-
-    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-    -- Using this option may slow down your editor, and you may see some duplicate highlights.
-    -- Instead of true it can also be a list of languages
-    additional_vim_regex_highlighting = false,
-  },
+require('nvim-treesitter').install {
+  "bash", "c", "cmake", "cpp", "css", "devicetree",
+  "dockerfile", "go", "gomod", "gowork", "html", "javascript",
+  "json", "make", "ninja", "python", "rust", "toml",
+  "typescript", "vim", "yaml", "zig"
 }
 
 -- colorizer setup
