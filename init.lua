@@ -289,8 +289,8 @@ wk.add({
   { "<leader>dd", "<cmd>LspStop<CR>", desc = "[D]isable Diagnostic" },
   { "<leader>de", "<cmd>LspStart<CR>", desc = "[E]nable Diagnostic" },
   { "<leader>dl", "<cmd>Telescope diagnostics<CR>", desc = "[L]ist Diagnostic" },
-  { "<leader>dn", "<cmd>lua vim.diagnostic.goto_next()<CR>", desc = "[N]ext Diagnostic" },
-  { "<leader>dp", "<cmd>lua vim.diagnostic.goto_prev()<CR>", desc = "[P]rev Diagnostic" },
+  { "<leader>dn", "<cmd>lua vim.diagnostic.jump({ count = 1, float = true })<CR>", desc = "[N]ext Diagnostic" },
+  { "<leader>dp", "<cmd>lua vim.diagnostic.jump({ count = -1, float = true })<CR>", desc = "[P]rev Diagnostic" },
   -- git
   { "<leader>g", group = "[G]it signs" },
   { "<leader>gd", "<cmd>Gitsigns preview_hunk<CR>", desc = "[D]iff Hunk" },
