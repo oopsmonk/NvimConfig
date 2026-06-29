@@ -28,6 +28,7 @@ local lsp_list = {
   "zls", -- zig lsp
   "ruff", -- python linter and formatter
   "pylsp", -- python lsp
+  "tinymist", -- typst lsp
   "lua_ls",
   "jsonls",
   "yamlls",
@@ -382,6 +383,12 @@ for _, server in ipairs(lsp_list) do
   if server ~= "zls" then
     vim.lsp.config(server, {
       capabilities = cmp_capabilities,
+    })
+  end
+  if server ~= "tinymist" then
+    vim.lsp.config(server, {
+      cmd = { "tinymist" },
+      filetypes = { "typst" },
     })
   end
 end
