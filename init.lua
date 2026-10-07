@@ -1,6 +1,6 @@
 --
 -- A simple lua config for nvim
--- Neovim 0.11.0+ with LuaJIT
+-- Neovim 0.12.0+ with LuaJIT
 --
 
 -- set ',' as the leader key
@@ -36,21 +36,14 @@ local lsp_list = {
   -- "gopls",
   -- "clangd",
   -- frontend dev
-  "ts_ls",
-  "tailwindcss",
-  "svelte",
+  -- "ts_ls",
+  -- "tailwindcss",
+  -- "svelte",
 }
 
--- Install plugins
+-- setup lazy.nvim install plugins
 require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
-
-  -- Git related plugins
-  'tpope/vim-fugitive',
-
-  -- Detect tabstop and shiftwidth automatically
-  -- check `:verbose set shiftwidth?`
-  'tpope/vim-sleuth',
 
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
@@ -64,40 +57,15 @@ require('lazy').setup({
         "neovim/nvim-lspconfig",
     },
   },
-  { -- replace neodev.nvim
-    "folke/lazydev.nvim",
-    ft = "lua", -- only load on lua files
-    opts = {
-      library = {
-        -- See the configuration section for more details
-        -- Load luvit types when the `vim.uv` word is found
-        { path = "${3rd}/luv/library", words = { "vim%.uv" } },
-      },
-    },
-  },
 
-  { -- Autocompletion
-    'hrsh7th/nvim-cmp',
-    event = 'InsertEnter',
-    dependencies = {
-      -- for neovim's built-in language server client
-      'hrsh7th/cmp-nvim-lsp',
-      -- path autocomplition
-      'hrsh7th/cmp-path',
-      -- buffer autocomplition
-      'hrsh7th/cmp-buffer',
-      -- tags autocomplition
-      'quangnguyen30192/cmp-nvim-tags',
-      -- Snippet Engine for Neovim
-      'L3MON4D3/LuaSnip',
-      -- luasnip completion source for nvim-cmp
-      'saadparwaiz1/cmp_luasnip' },
-  },
+  -- nvim-mini
+  -- { 'nvim-mini/mini.comment', version = '*', opts = {} },
+  { 'nvim-mini/mini.pairs', version = '*', opts = {} },
 
   -- Useful plugin to show you pending keybinds.
   { 'folke/which-key.nvim', opts = { icons = { mappings = false }}},
 
-  { -- Adds git releated signs to the gutter, as well as utilities for managing changes
+	{ -- Adds git releated signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
     opts = {
       -- See `:help gitsigns.txt`
@@ -131,9 +99,6 @@ require('lazy').setup({
       },
     },
   },
-
-  -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
 
   -- Fuzzy Finder (files, lsp, etc)
   { 'nvim-telescope/telescope.nvim', version = '*', dependencies = { 'nvim-lua/plenary.nvim' } },
@@ -173,30 +138,28 @@ require('lazy').setup({
       { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
     },
   },
-  -- autopairs
-  { 'windwp/nvim-autopairs', opts = {}},
   -- buffer as tabs
   {'akinsho/bufferline.nvim', version = "*", dependencies = 'nvim-tree/nvim-web-devicons', opts = {} },
   -- file explorer
   'preservim/nerdtree',
-  -- display tags in a windown
+  -- display tags in a window
   'preservim/tagbar',
   -- zig language
   {'ziglang/zig.vim', url = "https://codeberg.org/ziglang/zig.vim.git"},
   -- A (Neo)vim plugin for formatting code.
   'sbdchd/neoformat',
-  -- The fastest Neovim colorizer.
-  'catgoose/nvim-colorizer.lua',
-  -- render markdown
-  {
-    'MeanderingProgrammer/render-markdown.nvim',
-    dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.nvim' }, -- if you use the mini.nvim suite
-    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' }, -- if you use standalone mini plugins
-    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
-    ---@module 'render-markdown'
-    ---@type render.md.UserConfig
-    opts = {},
-  }
+  -- -- The fastest Neovim colorizer.
+  -- 'catgoose/nvim-colorizer.lua',
+  -- -- render markdown
+  -- {
+  --   'MeanderingProgrammer/render-markdown.nvim',
+  --   dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.nvim' }, -- if you use the mini.nvim suite
+  --   -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' }, -- if you use standalone mini plugins
+  --   -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
+  --   ---@module 'render-markdown'
+  --   ---@type render.md.UserConfig
+  --   opts = {},
+  -- }
 
 }, {
   -- lazy configuration
@@ -234,7 +197,7 @@ require('lazy').setup({
 vim.opt.updatetime = 300
 
 -- increase cmd history
-vim.opt.history = 1000
+vim.opt.history = 3000
 
 -- use relative line number
 vim.opt.number = true
@@ -256,10 +219,25 @@ vim.opt.wildignore = { '*.o', '*.a', '*.obj' }
 vim.opt.cursorline = true
 
 -- go to last location
-vim.api.nvim_create_autocmd("BufReadPost", { command = [[if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g`\"" | endif]] })
+vim.api.nvim_create_autocmd("BufReadPost", {
+  callback = function()
+    local mark = vim.api.nvim_buf_get_mark(0, '"')
+    local line = mark[1]
+
+    if line > 1 and line <= vim.api.nvim_buf_line_count(0) then
+      pcall(vim.api.nvim_win_set_cursor, 0, mark)
+    end
+  end,
+})
 
  -- popup menu
-vim.opt.completeopt = {'menu', 'menuone', 'noselect'}
+-- vim.opt.completeopt = {'menu', 'menuone', 'noselect'}
+vim.opt.completeopt = {
+  "menu",
+  "menuone",
+  "noselect",
+  "popup",
+}
 
 -- disable providers
 -- vim.g.loaded_node_provider = 0
@@ -322,42 +300,6 @@ end
 
 -- ========LSP and Autocomplition config========
 
--- nvim-cmp setup
-local cmp = require('cmp')
-cmp.setup({
-  snippet = {
-    -- REQUIRED - you must specify a snippet engine
-    expand = function(args)
-    -- vim.fn["vsnip#anonymous"](args.body) -- For 'vsnip` users
-      require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
-    end,
-  },
-  window = {
-  -- completion = cmp.config.window.bordered(),
-  -- documentation = cmp.config.window.bordered(),
-  },
-  mapping = cmp.mapping.preset.insert({
-    -- ['<C-n>'] = cmp.mapping.select_next_item(),
-    -- ['<C-p>'] = cmp.mapping.select_prev_item(),
-    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-f>'] = cmp.mapping.scroll_docs(4),
-    ['<C-Space>'] = cmp.mapping.complete(),
-    ['<C-e>'] = cmp.mapping.abort(),
-    ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-  }),
-  sources = cmp.config.sources({
-    { name = 'nvim_lsp' },
-    { name = 'luasnip' }, -- For luasnip users.
-  }, {
-    { name = 'buffer' },
-    { name = 'path' },
-    { name = 'tags' },
-  })
-})
-
--- The nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
-local cmp_capabilities = require('cmp_nvim_lsp').default_capabilities()
-
 -- Mason
 -- Easily install and manage LSP servers, DAP servers, linters, and formatters.
 require("mason").setup()
@@ -393,37 +335,6 @@ for _, server in ipairs(lsp_list) do
   end
 end
 
-
--- luasnip setup
--- ref: https://github.com/L3MON4D3/LuaSnip/blob/master/Examples/snippets.lua
-local ls = require('luasnip')
-ls.config.set_config({
-  history = true,
-  -- Update more often, :h events for more info.
-  update_events = "TextChanged,TextChangedI",
-  -- treesitter-hl has 100, use something higher (default is 200).
-  ext_base_prio = 300,
-  -- minimal increase in priority.
-  ext_prio_increase = 1,
-  enable_autosnippets = true,
-})
-
--- for snippet to jump between parameters
--- <c-j> is my expansion key
--- this will expand the current item or jump to the next item within the snippet.
-vim.keymap.set({ "i", "s" }, "<c-j>", function()
-  if ls.expand_or_jumpable() then
-    ls.expand_or_jump()
-  end
-end, { silent = true })
--- <c-k> is my jump backwards key.
--- this always moves to the previous item within the snippet
-vim.keymap.set({ "i", "s" }, "<c-k>", function()
-  if ls.jumpable(-1) then
-    ls.jump(-1)
-  end
-end, { silent = true })
-
 -- ========plugin config========
 
 -- telescope
@@ -450,17 +361,3 @@ require('nvim-treesitter').install {
   "typescript", "vim", "yaml", "zig"
 }
 
--- colorizer setup
--- ref: https://github.com/NvChad/nvim-colorizer.lua/tree/master?tab=readme-ov-file#customization
-require('colorizer').setup {
-  filetypes = {
-    'css',
-    'javascript',
-    'typescript',
-    'html',
-    'svelte',
-  },
-  user_default_options = {
-    tailwind = true,
-  }
-}
