@@ -1,6 +1,5 @@
 --
--- A simple lua config for nvim
--- Neovim 0.12+
+-- A simple lua config for Neovim 0.12+
 --
 
 -- ============================================================================
@@ -48,10 +47,28 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 -- Plugins
 -- ============================================================================
 
--- Neovim 0.12 built-in package manager.
+-- pack: Neovim 0.12 built-in package manager.
 vim.pack.add({
-  "https://github.com/nvim-mini/mini.nvim",
-  "https://github.com/neovim/nvim-lspconfig",
+	-- { src = 'https://github.com/nvim-mini/mini.hues', version = 'stable' },
+	{ src = 'https://github.com/nvim-mini/mini.icons', version = 'stable' },
+	{ src = 'https://github.com/nvim-mini/mini.clue', version = 'stable' },
+	{ src = 'https://github.com/nvim-mini/mini.comment', version = 'stable' },
+	{ src = 'https://github.com/nvim-mini/mini.pairs', version = 'stable' },
+	{ src = 'https://github.com/nvim-mini/mini.diff', version = 'stable' },
+	{ src = 'https://github.com/nvim-mini/mini.files', version = 'stable' },
+	{ src = 'https://github.com/nvim-mini/mini.pick', version = 'stable' },
+	{ src = 'https://github.com/nvim-mini/mini.extra', version = 'stable' },
+	{ src = 'https://github.com/nvim-mini/mini.statusline', version = 'stable' },
+	{ src = 'https://github.com/nvim-mini/mini.tabline', version = 'stable' },
+	{ src = 'https://github.com/nvim-mini/mini.notify', version = 'stable' },
+	{ src = 'https://github.com/nvim-mini/mini.snippets', version = 'stable' },
+	{ src = 'https://github.com/nvim-mini/mini.completion', version = 'stable' },
+	{ src = 'https://github.com/neovim/nvim-lspconfig' },
+	{ src = 'https://github.com/mason-org/mason.nvim' },
+	{ src = 'https://github.com/mason-org/mason-lspconfig.nvim' },
+	{ src = 'https://github.com/sbdchd/neoformat' },
+	{ src = 'https://github.com/nvim-treesitter/nvim-treesitter' },
+	{ src = 'https://github.com/navarasu/onedark.nvim' },
 })
 
 -- ============================================================================
@@ -59,7 +76,11 @@ vim.pack.add({
 -- ============================================================================
 
 -- bundled mini.hues colorscheme
-vim.cmd.colorscheme("miniwinter")
+-- vim.cmd.colorscheme("miniwinter")
+require('onedark').setup {
+    style = 'darker'
+}
+require('onedark').load()
 
 -- ============================================================================
 -- mini.icons
@@ -78,6 +99,9 @@ require("mini.icons").setup({
 local clue = require("mini.clue")
 
 clue.setup({
+	window = {
+		config = { anchor = 'SE', row = 'auto', col = 'auto' },
+	},
   triggers = {
     -- Leader mappings
     { mode = "n", keys = "<Leader>" },
@@ -168,8 +192,6 @@ local files = require("mini.files")
 files.setup({
   options = {
     -- Use mini.files when opening a directory:
-    --
-    --   nvim .
     use_as_default_explorer = true,
   },
 
@@ -245,6 +267,10 @@ map("n", "<Leader>bn", "<cmd>bnext<CR>", {
 
 map("n", "<Leader>bp", "<cmd>bprevious<CR>", {
   desc = "[B]uffer [P]revious",
+})
+
+map("n", "<Leader>bd", "<cmd>bdel<CR>", {
+  desc = "[B]uffer [D]elete",
 })
 
 -- --------------------------------------------------------------------------
@@ -337,6 +363,7 @@ require("mini.tabline").setup({
 --
 --   vim.lsp.config()
 --   vim.lsp.enable()
+
 local lsp_list = {
   "zls",
   "ruff",
@@ -351,6 +378,12 @@ local lsp_list = {
   "tailwindcss",
   "svelte",
 }
+
+require("mason").setup()
+
+require("mason-lspconfig").setup({
+  ensure_installed = lsp_list,
+})
 
 -- ============================================================================
 -- Server-specific config
@@ -434,6 +467,13 @@ map("i", "<C-Space>", vim.lsp.completion.get, {
 --
 -- These are built into Neovim.
 
+-- To use `<Tab>` and `<S-Tab>` for navigation through completion list
+-- local imap_expr = function(lhs, rhs)
+-- 	vim.keymap.set('i', lhs, rhs, { expr = true })
+-- end
+-- imap_expr('<Tab>',   [[pumvisible() ? "\<C-n>" : "\<Tab>"]])
+-- imap_expr('<S-Tab>', [[pumvisible() ? "\<C-p>" : "\<S-Tab>"]])
+
 -- ============================================================================
 -- LSP mappings
 -- ============================================================================
@@ -483,4 +523,36 @@ map("n", "<Leader>H", function()
 end, {
   desc = "Toggle Inlay Hints",
 })
+
+-- ============================================================================
+-- mini.nofity
+-- ============================================================================
+require("mini.notify").setup()
+
+-- ============================================================================
+-- snippets and completion
+-- ============================================================================
+require('mini.snippets').setup()
+
+-- local gen_loader = require('mini.snippets').gen_loader
+-- require('mini.snippets').setup({
+--   snippets = {
+--     -- Load custom file with global snippets first (adjust for Windows)
+--     gen_loader.from_file('~/.config/nvim/snippets/global.json'),
+--
+--     -- Load snippets based on current language by reading files from
+--     -- "snippets/" subdirectories from 'runtimepath' directories.
+--     gen_loader.from_lang(),
+--   },
+-- })
+
+require("mini.completion").setup()
+
+require('nvim-treesitter').setup {
+  -- Directory to install parsers and queries to (prepended to `runtimepath` to have priority)
+  install_dir = vim.fn.stdpath('data') .. '/site'
+}
+
+-- require('nvim-treesitter').install { 'rust', 'javascript', 'zig' }
+require('nvim-treesitter').install { 'zig' }
 
