@@ -27,7 +27,7 @@ vim.opt.rtp:prepend(lazypath)
 local lsp_list = {
   "zls", -- zig lsp
   "ruff", -- python linter and formatter
-  "pylsp", -- python lsp
+  -- "pylsp", -- python lsp
   "tinymist", -- typst lsp
   "lua_ls",
   "jsonls",
@@ -59,8 +59,12 @@ require('lazy').setup({
   },
 
   -- nvim-mini
-  -- { 'nvim-mini/mini.comment', version = '*', opts = {} },
   { 'nvim-mini/mini.pairs', version = '*', opts = {} },
+  { 'nvim-mini/mini.completion', version = '*', opts = {} },
+  { 'nvim-mini/mini.notify', version = '*', opts = {} },
+  { 'nvim-mini/mini.snippets', version = '*', opts = {} },
+  { 'nvim-mini/mini.icons', version = '*', opts = {style = 'glyph'} },
+  { 'nvim-mini/mini.tabline', version = '*', opts = {} },
 
   -- Useful plugin to show you pending keybinds.
   { 'folke/which-key.nvim', opts = { icons = { mappings = false }}},
@@ -139,7 +143,7 @@ require('lazy').setup({
     },
   },
   -- buffer as tabs
-  {'akinsho/bufferline.nvim', version = "*", dependencies = 'nvim-tree/nvim-web-devicons', opts = {} },
+  -- {'akinsho/bufferline.nvim', version = "*", dependencies = 'nvim-tree/nvim-web-devicons', opts = {} },
   -- file explorer
   'preservim/nerdtree',
   -- display tags in a window
@@ -150,16 +154,17 @@ require('lazy').setup({
   'sbdchd/neoformat',
   -- -- The fastest Neovim colorizer.
   -- 'catgoose/nvim-colorizer.lua',
-  -- -- render markdown
-  -- {
-  --   'MeanderingProgrammer/render-markdown.nvim',
-  --   dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.nvim' }, -- if you use the mini.nvim suite
-  --   -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' }, -- if you use standalone mini plugins
-  --   -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
-  --   ---@module 'render-markdown'
-  --   ---@type render.md.UserConfig
-  --   opts = {},
-  -- }
+
+  -- render markdown
+  {
+    'MeanderingProgrammer/render-markdown.nvim',
+    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.nvim' }, -- if you use the mini.nvim suite
+    dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' }, -- if you use standalone mini plugins
+    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
+    ---@module 'render-markdown'
+    ---@type render.md.UserConfig
+    opts = {},
+  }
 
 }, {
   -- lazy configuration
@@ -261,7 +266,7 @@ wk.add({
   { "<leader>bn", "<cmd>bn<CR>", desc = "[N]ext Buffer" },
   { "<leader>bp", "<cmd>bp<CR>", desc = "[P]revious Buffer" },
   { "<leader>br", "<cmd>lua vim.lsp.buf.rename()<CR>", desc = "[R]ename in Buffer" },
-  { "<leader>bs", "<cmd>BufferLinePick<CR>", desc = "[S]elete buffer tab" },
+  -- { "<leader>bs", "<cmd>BufferLinePick<CR>", desc = "[S]elete buffer tab" },
   -- diagnostics
   { "<leader>d", group = "[D]iagnostics" },
   { "<leader>da", "<cmd>lua vim.lsp.buf.code_action()<CR>", desc = "Code [A]ction" },
@@ -303,37 +308,37 @@ end
 -- Mason
 -- Easily install and manage LSP servers, DAP servers, linters, and formatters.
 require("mason").setup()
-local home_dir = os.getenv('HOME')
-
--- use nvim-cmp for all servers
--- vim.lsp.config("*", {
---   capabilities = cmp_capabilities,
--- })
 
 -- `zig` LSP to use local lsp engine
-local zls_path = home_dir .. "/bin/zls"
+local zls_path = vim.env.HOME .. "/bin/zls"
 if vim.fn.executable(zls_path) == 1 then
   vim.lsp.config("zls", {
     cmd = { zls_path },
-    -- nvim-cmp is bloated with zls, therefor we use default one.
-    -- capabilities = cmp_capabilities,
   })
 end
 
--- apply nvim-cmp to specific server
-for _, server in ipairs(lsp_list) do
-  if server ~= "zls" then
-    vim.lsp.config(server, {
-      capabilities = cmp_capabilities,
-    })
-  end
-  if server ~= "tinymist" then
-    vim.lsp.config(server, {
-      cmd = { "tinymist" },
-      filetypes = { "typst" },
-    })
-  end
-end
+-- Lua / Neovim development.
+-- fixed "Undefined global vim"
+vim.lsp.config("lua_ls", {
+  settings = {
+    Lua = {
+      runtime = {
+        version = "LuaJIT",
+      },
+
+      workspace = {
+        -- Don't ask about configuring third-party libraries.
+        checkThirdParty = false,
+
+        library = {
+          vim.env.VIMRUNTIME,
+        },
+      },
+    },
+  },
+})
+
+vim.lsp.enable(lsp_list)
 
 -- ========plugin config========
 
@@ -360,4 +365,22 @@ require('nvim-treesitter').install {
   "json", "make", "ninja", "python", "rust", "toml",
   "typescript", "vim", "yaml", "zig"
 }
+
+-- Native completion menu:
+--
+--   <C-n>    next item
+--   <C-p>    previous item
+--   <C-y>    accept selected item
+--   <C-e>    cancel completion
+--   <C-l>    snippets next item
+--   <C-h>    snippets previous item
+--
+-- These are built into Neovim.
+
+-- To use `<Tab>` and `<S-Tab>` for navigation through completion list
+local imap_expr = function(lhs, rhs)
+	vim.keymap.set('i', lhs, rhs, { expr = true })
+end
+imap_expr('<Tab>',   [[pumvisible() ? "\<C-n>" : "\<Tab>"]])
+imap_expr('<S-Tab>', [[pumvisible() ? "\<C-p>" : "\<S-Tab>"]])
 
