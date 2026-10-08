@@ -41,6 +41,15 @@ local lsp_list = {
   -- "svelte",
 }
 
+-- treesitter highlighting
+-- try to keep insync with `lsp_list`
+-- stylua: ignore
+local ts_hl = {
+  "bash", "c", "cmake", "cpp", "css", "devicetree", "dockerfile", "go",
+  "gomod", "gowork", "html", "javascript", "json", "make", "ninja",
+  "python", "rust", "toml", "typescript", "typst", "vim", "yaml", "zig",
+}
+
 local mason_tools = {
   "stylua", -- lua formatter
   "prettier", -- general formatter for code
@@ -153,12 +162,7 @@ require("lazy").setup({
     branch = "main",
     build = ":TSUpdate",
     config = function()
-      -- stylua: ignore
-      require("nvim-treesitter").install({
-        "bash", "c", "cmake", "cpp", "css", "devicetree", "dockerfile", "go",
-        "gomod", "gowork", "html", "javascript", "json", "make", "ninja",
-        "python", "rust", "toml", "typescript", "vim", "yaml", "zig",
-      })
+      require("nvim-treesitter").install(ts_hl)
 
       -- Parser installation does not enable highlighting on the main branch.
       vim.api.nvim_create_autocmd("FileType", {
@@ -269,6 +273,7 @@ vim.opt.cursorline = true
 
 -- go to last location
 vim.api.nvim_create_autocmd("BufReadPost", {
+  group = vim.api.nvim_create_augroup("RestoreCursor", { clear = true }),
   callback = function()
     local mark = vim.api.nvim_buf_get_mark(0, '"')
     local line = mark[1]
@@ -344,7 +349,7 @@ wk.add({
   { "<leader>tb", "<cmd>Telescope buffers<CR>", desc = "[T]o [B]uffer" },
   { "<leader>td", "<cmd>Telescope lsp_definitions<CR>", desc = "[T]o [D]efinitions" },
   { "<leader>tf", "<cmd>Telescope find_files previewer=false<CR>", desc = "[T]o [F]ile" },
-  { "<leader>ti", "<cmd>Telescope lsp_implementations<CR>", desc = "[T] [I]mplementations" },
+  { "<leader>ti", "<cmd>Telescope lsp_implementations<CR>", desc = "[T]o [I]mplementations" },
   { "<leader>tl", "<cmd>Telescope live_grep<CR>", desc = "[T]elescope [L]ive grep" },
   { "<leader>tm", "<cmd>Telescope marks<CR>", desc = "[T]o [M]arks" },
   { "<leader>tr", "<cmd>Telescope lsp_references<CR>", desc = "[T]o [R]eferences" },
