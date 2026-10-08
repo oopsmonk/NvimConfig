@@ -6,6 +6,7 @@ tabWidth = 2
 useTabs = false
 bracketSpacing = true
 
+# use `mdformat` instead
 # # markdown files
 # [[overrides]]
 # files = ["*.md", "*.markdown"]
