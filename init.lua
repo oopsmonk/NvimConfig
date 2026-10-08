@@ -202,8 +202,8 @@ require("lazy").setup({
   -- render markdown
   {
     "MeanderingProgrammer/render-markdown.nvim",
-    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.nvim' }, -- if you use the mini.nvim suite
-    dependencies = { "nvim-treesitter/nvim-treesitter", "echasnovski/mini.icons" }, -- if you use standalone mini plugins
+    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim' }, -- if you use the mini.nvim suite
+    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-mini/mini.icons" }, -- if you use standalone mini plugins
     -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
     ---@module 'render-markdown'
     ---@type render.md.UserConfig
@@ -253,6 +253,7 @@ vim.opt.relativenumber = true
 
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
+vim.opt.expandtab = true
 
 -- enable system clipboard
 vim.opt.clipboard = "unnamedplus"
@@ -310,7 +311,7 @@ wk.add({
   { "<leader>bn", "<cmd>bn<CR>", desc = "[N]ext Buffer" },
   { "<leader>bp", "<cmd>bp<CR>", desc = "[P]revious Buffer" },
   { "<leader>br", vim.lsp.buf.rename, desc = "[R]ename in Buffer" },
-  { "<leader>bs", "<cmd>BufferLinePick<CR>", desc = "[S]elete buffer tab" },
+  { "<leader>bs", "<cmd>BufferLinePick<CR>", desc = "[S]elect buffer tab" },
   -- diagnostics
   { "<leader>d", group = "[D]iagnostics" },
   { "<leader>da", vim.lsp.buf.code_action, desc = "Code [A]ction" },

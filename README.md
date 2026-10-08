@@ -47,7 +47,7 @@ The leader key is **`,`**.
 | `,nt` | Toggle NERDTree |
 | `,ng` | Open NERDTree at the version-control root |
 | `,bd` | Delete buffer |
-| `,bs` | Selete buffer |
+| `,bs` | Select buffer |
 | `,bn` / `,bp` | Next / previous buffer |
 | `,bh` | LSP hover information |
 | `,br` | LSP rename |
