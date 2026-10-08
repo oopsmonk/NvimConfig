@@ -43,11 +43,11 @@ local lsp_list = {
 
 local mason_tools = {
   "stylua", -- lua formatter
+  "prettier", -- general formatter for code
+  "mdformat", -- Markdown formatter
 }
 -- setup lazy.nvim install plugins
 require("lazy").setup({
-  -- NOTE: First, some plugins that don't require any configuration
-
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
   { -- LSP Configuration & Plugins
@@ -61,6 +61,7 @@ require("lazy").setup({
     },
   },
 
+  -- automatically install Mason tools
   {
     "WhoIsSethDaniel/mason-tool-installer.nvim",
     dependencies = { "mason-org/mason.nvim" },
@@ -73,7 +74,6 @@ require("lazy").setup({
   { "nvim-mini/mini.notify", version = "*", opts = {} },
   { "nvim-mini/mini.snippets", version = "*", opts = {} },
   { "nvim-mini/mini.icons", version = "*", opts = { style = "glyph" } },
-  { "nvim-mini/mini.tabline", version = "*", opts = {} },
 
   -- Useful plugin to show you pending keybinds.
   { "folke/which-key.nvim", opts = { icons = { mappings = false } } },
@@ -102,6 +102,7 @@ require("lazy").setup({
 
   { -- Set lualine as statusline
     "nvim-lualine/lualine.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
     -- See `:help lualine.txt`
     opts = {
       options = {
@@ -186,7 +187,7 @@ require("lazy").setup({
     },
   },
   -- buffer as tabs
-  -- {'akinsho/bufferline.nvim', version = "*", dependencies = 'nvim-tree/nvim-web-devicons', opts = {} },
+  { "akinsho/bufferline.nvim", version = "*", dependencies = "nvim-tree/nvim-web-devicons", opts = {} },
   -- file explorer
   "preservim/nerdtree",
   -- display tags in a window
@@ -289,9 +290,10 @@ vim.opt.completeopt = {
 -- vim.g.loaded_node_provider = 0
 vim.g.loaded_perl_provider = 0
 
--- python formatter use ruff
+-- ========formatter configs for Neoformat========
 vim.g.neoformat_enabled_python = { "ruff" }
 vim.g.neoformat_enabled_lua = { "stylua" }
+vim.g.neoformat_enabled_markdown = { "mdformat" }
 vim.g.neoformat_try_node_exe = 1
 
 -- ========key mapping========
@@ -308,7 +310,7 @@ wk.add({
   { "<leader>bn", "<cmd>bn<CR>", desc = "[N]ext Buffer" },
   { "<leader>bp", "<cmd>bp<CR>", desc = "[P]revious Buffer" },
   { "<leader>br", vim.lsp.buf.rename, desc = "[R]ename in Buffer" },
-  -- { "<leader>bs", "<cmd>BufferLinePick<CR>", desc = "[S]elete buffer tab" },
+  { "<leader>bs", "<cmd>BufferLinePick<CR>", desc = "[S]elete buffer tab" },
   -- diagnostics
   { "<leader>d", group = "[D]iagnostics" },
   { "<leader>da", vim.lsp.buf.code_action, desc = "Code [A]ction" },
@@ -361,6 +363,24 @@ if vim.lsp.inlay_hint then
   })
 end
 
+-- Native completion menu:
+--
+--   <C-n>    next item
+--   <C-p>    previous item
+--   <C-y>    accept selected item
+--   <C-e>    cancel completion
+--   <C-l>    snippets next item
+--   <C-h>    snippets previous item
+--
+-- These are built into Neovim.
+
+-- To use `<Tab>` and `<S-Tab>` for navigation through completion list
+local imap_expr = function(lhs, rhs)
+  vim.keymap.set("i", lhs, rhs, { expr = true })
+end
+imap_expr("<Tab>", [[pumvisible() ? "\<C-n>" : "\<Tab>"]])
+imap_expr("<S-Tab>", [[pumvisible() ? "\<C-p>" : "\<S-Tab>"]])
+
 -- ========LSP and Autocomplition config========
 
 -- `zig` LSP to use local lsp engine
@@ -393,21 +413,3 @@ vim.lsp.config("lua_ls", {
 })
 
 vim.lsp.enable(lsp_list)
-
--- Native completion menu:
---
---   <C-n>    next item
---   <C-p>    previous item
---   <C-y>    accept selected item
---   <C-e>    cancel completion
---   <C-l>    snippets next item
---   <C-h>    snippets previous item
---
--- These are built into Neovim.
-
--- To use `<Tab>` and `<S-Tab>` for navigation through completion list
-local imap_expr = function(lhs, rhs)
-  vim.keymap.set("i", lhs, rhs, { expr = true })
-end
-imap_expr("<Tab>", [[pumvisible() ? "\<C-n>" : "\<Tab>"]])
-imap_expr("<S-Tab>", [[pumvisible() ? "\<C-p>" : "\<S-Tab>"]])

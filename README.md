@@ -4,20 +4,16 @@ A single-file Lua configuration for **Neovim 0.12.0+ with LuaJIT**. See [init.lu
 
 ## Requirements
 
-- Git and network access for plugin and tool installation.
-- Tree-sitter CLI **0.26.1 or newer**, a C compiler, `curl`, and `tar` for the configured Treesitter `main` branch.
-- `make` and a C compiler for the optional Telescope FZF native extension. Telescope remains usable when the extension is unavailable.
+- Tree-sitter CLI **0.26.1 or newer**, a C compiler, `curl`, and `gzip` for the configured Treesitter `main` branch.
 - `ripgrep` (`rg`) for Telescope live grep and string search.
-- Python 3 with virtual-environment support for `pylsp`. On Ubuntu with Python 3.12, install `python3.12-venv` if installation reports missing `ensurepip`.
+- Python 3 with virtual-environment support for `pylsp`.
 - Node.js and npm for the JSON and YAML language servers.
 - Universal Ctags for Tagbar; a clipboard provider for system clipboard integration.
 - A Nerd Font for the configured glyph icons.
 
 ## Setup and maintenance
 
-Place this repository's `init.lua` in Neovim's configuration directory, normally `~/.config/nvim/init.lua`. Keep `.stylua.toml` in the project when formatting this repository.
-
-On startup, the configuration bootstraps lazy.nvim, installs plugins, requests the configured LSP servers through Mason, and installs StyLua through mason-tool-installer. Treesitter requests missing parsers asynchronously; reopen a file after its first parser installation if highlighting is not yet active.
+On startup, the configuration bootstraps lazy.nvim, installs plugins, requests the configured LSP servers through `Mason`, and installs formaters through `mason-tool-installer`.
 
 | Command | Purpose |
 | --- | --- |
@@ -28,25 +24,10 @@ On startup, the configuration bootstraps lazy.nvim, installs plugins, requests t
 | `:checkhealth nvim-treesitter` | Check parser tooling and dependencies |
 | `:checkhealth vim.lsp` | Inspect LSP configuration and active clients |
 | `:Neoformat` | Format the current buffer |
-| `:TagbarToggle` | Toggle the symbol outline |
 
-Formatting uses **Ruff for Python** and **StyLua for Lua**. Formatting is manual; there is no format-on-save autocmd. [.stylua.toml](.stylua.toml) uses two-space indentation, prefers double quotes, and sets a 120-column width.
+There is no format-on-save autocmd. [.stylua.toml](.stylua.toml) uses two-space indentation, prefers double quotes, and sets a 120-column width.
 
 ## Language servers and parsers
-
-The `lsp_list` in `init.lua` requests installation and enables these servers:
-
-| Server | Language / purpose |
-| --- | --- |
-| `zls` | Zig |
-| `ruff` | Python linting and formatting |
-| `pylsp` | Python language features |
-| `tinymist` | Typst |
-| `lua_ls` | Lua, with LuaJIT and Neovim runtime settings |
-| `jsonls` | JSON |
-| `yamlls` | YAML |
-
-If executable, `~/bin/zls` overrides the default ZLS command. Installing a server does not guarantee attachment: the filetype and server's workspace rules must also match.
 
 To see servers attached to the current file:
 
@@ -54,11 +35,9 @@ To see servers attached to the current file:
 :lua vim.print(vim.tbl_map(function(c) return c.name end, vim.lsp.get_clients({ bufnr = 0 })))
 ```
 
-Treesitter installs parsers for Bash, C, CMake, C++, CSS, Devicetree, Dockerfile, Go, Go modules/workspaces, HTML, JavaScript, JSON, Make, Ninja, Python, Rust, TOML, TypeScript, Vim, YAML, and Zig. A `FileType` autocmd enables highlighting when a parser is available. Parser support and LSP support are configured separately.
-
 ## Keybindings
 
-The leader key is **`,`**. Pause after a mapping prefix to see which-key hints. Unless a mode is specified, the mappings below use Normal mode.
+The leader key is **`,`**.
 
 ### Files and buffers
 
@@ -68,6 +47,7 @@ The leader key is **`,`**. Pause after a mapping prefix to see which-key hints. 
 | `,nt` | Toggle NERDTree |
 | `,ng` | Open NERDTree at the version-control root |
 | `,bd` | Delete buffer |
+| `,bs` | Selete buffer |
 | `,bn` / `,bp` | Next / previous buffer |
 | `,bh` | LSP hover information |
 | `,br` | LSP rename |
@@ -144,17 +124,6 @@ mini.snippets is enabled with default options; no snippet collection is configur
 | `Ctrl-w r` | Rotate windows |
 | `Ctrl-w o` | Close other windows |
 
-## Editor settings
-
-- Absolute and relative line numbers, plus cursor-line highlighting.
-- Tab width and shift width of two; `expandtab` is not explicitly enabled.
-- System clipboard via `unnamedplus`; mouse enabled in Normal and Visual modes.
-- Restore the saved cursor position when reading a file.
-- Update interval of 300 ms and command history of 3000 entries.
-- Completion menu with popup information and no preselected item.
-- Ignore `*.o`, `*.a`, and `*.obj` during wildcard expansion.
-- Disable the Perl provider.
-
 ## Plugins
 
 Only active plugins and their dependencies are listed below.
@@ -171,7 +140,6 @@ Only active plugins and their dependencies are listed below.
 | [mini.notify](https://github.com/nvim-mini/mini.notify) | Notifications |
 | [mini.snippets](https://github.com/nvim-mini/mini.snippets) | Snippet expansion and navigation |
 | [mini.icons](https://github.com/nvim-mini/mini.icons) | Glyph icons |
-| [mini.tabline](https://github.com/nvim-mini/mini.tabline) | Buffer tabline |
 | [which-key.nvim](https://github.com/folke/which-key.nvim) | Mapping hints |
 | [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim) | Git gutter signs and hunk actions |
 | [onedark.nvim](https://github.com/navarasu/onedark.nvim) | Colorscheme |
@@ -187,3 +155,4 @@ Only active plugins and their dependencies are listed below.
 | [zig.vim](https://codeberg.org/ziglang/zig.vim) | Zig file detection and syntax |
 | [neoformat](https://github.com/sbdchd/neoformat) | Buffer formatting |
 | [render-markdown.nvim](https://github.com/MeanderingProgrammer/render-markdown.nvim) | Markdown rendering |
+| [bufferline.nvim](https://github.com/akinsho/bufferline.nvim) | A snazzy bufferline |

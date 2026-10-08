@@ -1,0 +1,14 @@
+# prettier playground: https://prettier.io/playground/
+
+# general configures
+printWidth = 120
+tabWidth = 2
+useTabs = false
+bracketSpacing = true
+
+# # markdown files
+# [[overrides]]
+# files = ["*.md", "*.markdown"]
+# [overrides.options]
+# proseWrap = "never"
+# tableLayout = "compact"
