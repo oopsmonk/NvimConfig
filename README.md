@@ -18,7 +18,7 @@ Dotfiles hatchery is a place for:
 │   ├── tmux.conf       # $XDG_CONFIG_HOME/tmux/tmux.conf
 │   └── wezterm.lua     # $XDG_CONFIG_HOME/wezterm/wezterm.lua
 ├── .gitignore
-├── nvim
+├── nvim # $XDG_CONFIG_HOME/nvim
 │   ├── init.lua
 │   ├── INSTALL_darwin.md
 │   ├── INSTALL.md
