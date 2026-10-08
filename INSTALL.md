@@ -6,10 +6,10 @@ This configuration requires **Neovim 0.12.0+ with LuaJIT** and **Tree-sitter CLI
 
 ```bash
 sudo apt-get update
-sudo apt-get install git curl tar gzip build-essential ripgrep universal-ctags python3 python3-venv python3-pip nodejs npm
+sudo apt-get install git curl tar gzip build-essential ripgrep universal-ctags python3 python3-venv python3-pip
 ```
 
-`build-essential` supplies a C compiler and `make` for parsers and Telescope's optional FZF extension. JSON and YAML servers need Node.js/npm; if Mason reports an unsupported Node version, upgrade Node.js to a version accepted by that package.
+`build-essential` supplies a C compiler and `make` for parsers and Telescope's optional FZF extension.
 
 For clipboard access, install the tool matching your desktop session:
 
