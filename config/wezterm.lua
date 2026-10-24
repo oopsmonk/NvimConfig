@@ -6,9 +6,15 @@ local config = wezterm.config_builder()
 
 -- font
 config.font_size = 15
-config.font = wezterm.font '0xProto Nerd Font'
+-- config.font = wezterm.font '0xProto Nerd Font'
+config.font = wezterm.font_with_fallback({
+	'0xProto Nerd Font',
+  'FiraCode Nerd Font',
+  'Symbols Nerd Font Mono',
+})
 
--- config.color_scheme = 'AdventureTime'
+config.color_scheme = 'Desert (Gogh)'
+-- config.color_scheme = 'Desert'
 
 -- bind mouse right-click with Copy & Paste
 local act = wezterm.action
@@ -28,6 +34,8 @@ config.mouse_bindings = {
 	},
 }
 
+-- config.window_background_opacity = 0.9
+-- config.enable_tab_bar = false
 
 -- Finally, return the configuration to wezterm:
 return config
